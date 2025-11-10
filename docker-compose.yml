@@ -1,0 +1,18 @@
+services:
+  fintrack_db:
+    image: postgres:16.10
+    container_name: fintrack_db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: fintrack
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./sql/postgresql/data:/var/lib/postgresql/data
+    networks:
+      - fintrack-network
+
+networks:
+  fintrack-network:
+    driver: bridge

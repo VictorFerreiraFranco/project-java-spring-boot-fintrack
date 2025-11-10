@@ -1,3 +1,36 @@
+application:
+  security:
+    jwt:
+      secret-key: "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970"
+      expiration: 900000 # (15 minutes)
+      refresh-token:
+        expiration: 604800000 # (7 days)
+
 spring:
   application:
     name: fintrack
+
+  output:
+    ansi:
+      enabled: always
+  datasource:
+    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/fintrack}
+    username: ${DATASOURCE_USERNAME:root}
+    password: ${DATASOURCE_PASSWORD:root}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+
+# --- Production
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+  jpa:
+    show-sql: false
