@@ -3,21 +3,13 @@ package io.github.fintrack.auth.controller.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class AuthenticationRequest {
+public record AuthenticationRequest(
     @NotBlank(message = "field required")
     @Email
-    private String email;
+    String email,
 
     @NotBlank(message = "field required")
     @Size(min = 5, message = "the field must contain min {min} characters")
-    private String password;
-}
+    String password
+) {}

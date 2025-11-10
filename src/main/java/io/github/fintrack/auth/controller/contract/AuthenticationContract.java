@@ -3,37 +3,48 @@ package io.github.fintrack.auth.controller.contract;
 import io.github.fintrack._common.config.auth.jwt.JwtService;
 import io.github.fintrack.auth.controller.dto.AuthenticationRequest;
 import io.github.fintrack.auth.controller.dto.AuthenticationResponse;
-import io.github.fintrack.auth.controller.dto.UserRegisterRequest;
+import io.github.fintrack.auth.controller.dto.RegisterRequest;
 import io.github.fintrack.auth.controller.dto.TokenRefreshRequest;
-import io.github.fintrack.auth.controller.mapper.UserMapper;
+import io.github.fintrack.auth.controller.mapper.RegisterRequestMapper;
 import io.github.fintrack.auth.exception.TokenRefreshException;
 import io.github.fintrack.auth.model.RefreshToken;
 import io.github.fintrack.auth.model.User;
 import io.github.fintrack.auth.service.RefreshTokenService;
 import io.github.fintrack.auth.service.UserService;
+import io.github.fintrack.workspace.model.Type;
+import io.github.fintrack.workspace.model.Workspace;
+import io.github.fintrack.workspace.service.WorkspaceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class AuthenticationContract {
 
     private final UserService userService;
     private final RefreshTokenService refreshTokenService;
-    private final UserMapper userMapper;
+    private final WorkspaceService workspaceService;
+    private final RegisterRequestMapper userMapper;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public AuthenticationResponse register(UserRegisterRequest request) {
+    @Transactional
+    public AuthenticationResponse register(RegisterRequest request) {
         User user = userMapper.toEntity(request);
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.save(user);
+
+        Workspace workspace = Workspace.builder()
+                .name("Principal")
+                .type(Type.MAIN)
+                .build();
+        workspaceService.save(workspace);
 
         return buildAuthenticationResponseWithNewToken(user);
     }
@@ -41,19 +52,19 @@ public class AuthenticationContract {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                    request.getEmail(),
-                    request.getPassword()
+                    request.email(),
+                    request.password()
             )
         );
 
-        User user = userService.findByEmail(request.getEmail())
+        User user = userService.findByEmail(request.email())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         return buildAuthenticationResponseWithNewToken(user);
     }
 
     public AuthenticationResponse refreshToken(TokenRefreshRequest request) {
-        String requestRefreshToken = request.getRefreshToken();
+        String requestRefreshToken = request.refreshToken();
 
         return refreshTokenService.findByToken(requestRefreshToken)
                 .map(refreshTokenService::verifyExpiration)

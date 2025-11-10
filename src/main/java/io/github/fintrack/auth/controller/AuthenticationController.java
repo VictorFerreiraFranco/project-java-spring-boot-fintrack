@@ -2,7 +2,7 @@ package io.github.fintrack.auth.controller;
 
 import io.github.fintrack.auth.controller.dto.AuthenticationRequest;
 import io.github.fintrack.auth.controller.dto.AuthenticationResponse;
-import io.github.fintrack.auth.controller.dto.UserRegisterRequest;
+import io.github.fintrack.auth.controller.dto.RegisterRequest;
 import io.github.fintrack.auth.controller.dto.TokenRefreshRequest;
 import io.github.fintrack.auth.controller.contract.AuthenticationContract;
 import jakarta.validation.Valid;
@@ -22,7 +22,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
-            @Valid @RequestBody UserRegisterRequest request
+            @Valid @RequestBody RegisterRequest request
     ) {
         return ResponseEntity.ok(contract.register(request));
     }
