@@ -43,6 +43,7 @@ public class AuthenticationContract {
         Workspace workspace = Workspace.builder()
                 .name("Principal")
                 .type(Type.MAIN)
+                .createdBy(user)
                 .build();
         workspaceService.save(workspace);
 
