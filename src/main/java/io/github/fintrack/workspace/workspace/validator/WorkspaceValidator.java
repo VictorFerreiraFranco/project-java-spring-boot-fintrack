@@ -1,8 +1,8 @@
-package io.github.fintrack.workspace.validator;
+package io.github.fintrack.workspace.workspace.validator;
 
-import io.github.fintrack.workspace.exception.CannotDeleteMainWorkspaceException;
-import io.github.fintrack.workspace.model.Type;
-import io.github.fintrack.workspace.model.Workspace;
+import io.github.fintrack.workspace.workspace.exception.CannotDeleteMainWorkspaceException;
+import io.github.fintrack.workspace.workspace.model.Type;
+import io.github.fintrack.workspace.workspace.model.Workspace;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration

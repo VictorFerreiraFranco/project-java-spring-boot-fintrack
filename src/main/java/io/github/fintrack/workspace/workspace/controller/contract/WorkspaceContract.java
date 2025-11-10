@@ -1,11 +1,11 @@
-package io.github.fintrack.workspace.controller.contract;
+package io.github.fintrack.workspace.workspace.controller.contract;
 
 import io.github.fintrack._common.exception.ResourceNotFoundException;
-import io.github.fintrack.workspace.controller.dto.WorkspaceRequest;
-import io.github.fintrack.workspace.controller.mapper.WorkspaceRequestMapper;
-import io.github.fintrack.workspace.model.Type;
-import io.github.fintrack.workspace.model.Workspace;
-import io.github.fintrack.workspace.service.WorkspaceService;
+import io.github.fintrack.workspace.workspace.controller.dto.WorkspaceRequest;
+import io.github.fintrack.workspace.workspace.controller.mapper.WorkspaceRequestMapper;
+import io.github.fintrack.workspace.workspace.model.Type;
+import io.github.fintrack.workspace.workspace.model.Workspace;
+import io.github.fintrack.workspace.workspace.service.WorkspaceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

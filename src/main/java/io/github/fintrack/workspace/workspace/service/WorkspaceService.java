@@ -1,9 +1,9 @@
-package io.github.fintrack.workspace.service;
+package io.github.fintrack.workspace.workspace.service;
 
 import io.github.fintrack.auth.service.AuthService;
-import io.github.fintrack.workspace.model.Workspace;
-import io.github.fintrack.workspace.repository.WorkspaceRepository;
-import io.github.fintrack.workspace.validator.WorkspaceValidator;
+import io.github.fintrack.workspace.workspace.model.Workspace;
+import io.github.fintrack.workspace.invite.repository.WorkspaceRepository;
+import io.github.fintrack.workspace.workspace.validator.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

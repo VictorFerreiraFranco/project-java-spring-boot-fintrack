@@ -1,4 +1,4 @@
-package io.github.fintrack.workspace.model;
+package io.github.fintrack.workspace.workspace.model;
 
 import io.github.fintrack._common.model.CreatedAndDeleteEntity;
 import io.github.fintrack.auth.model.User;

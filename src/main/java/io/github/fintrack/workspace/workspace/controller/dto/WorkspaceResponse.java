@@ -1,4 +1,4 @@
-package io.github.fintrack.workspace.controller.dto;
+package io.github.fintrack.workspace.workspace.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

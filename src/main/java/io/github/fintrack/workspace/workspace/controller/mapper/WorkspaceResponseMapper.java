@@ -1,7 +1,7 @@
-package io.github.fintrack.workspace.controller.mapper;
+package io.github.fintrack.workspace.workspace.controller.mapper;
 
-import io.github.fintrack.workspace.controller.dto.WorkspaceResponse;
-import io.github.fintrack.workspace.model.Workspace;
+import io.github.fintrack.workspace.workspace.controller.dto.WorkspaceResponse;
+import io.github.fintrack.workspace.workspace.model.Workspace;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

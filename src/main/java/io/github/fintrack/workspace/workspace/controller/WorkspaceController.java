@@ -1,11 +1,11 @@
-package io.github.fintrack.workspace.controller;
+package io.github.fintrack.workspace.workspace.controller;
 
 import io.github.fintrack._common.controller.GenericController;
-import io.github.fintrack.workspace.controller.contract.WorkspaceContract;
-import io.github.fintrack.workspace.controller.dto.WorkspaceRequest;
-import io.github.fintrack.workspace.controller.dto.WorkspaceResponse;
-import io.github.fintrack.workspace.controller.mapper.WorkspaceResponseMapper;
-import io.github.fintrack.workspace.model.Workspace;
+import io.github.fintrack.workspace.workspace.controller.contract.WorkspaceContract;
+import io.github.fintrack.workspace.workspace.controller.dto.WorkspaceRequest;
+import io.github.fintrack.workspace.workspace.controller.dto.WorkspaceResponse;
+import io.github.fintrack.workspace.workspace.controller.mapper.WorkspaceResponseMapper;
+import io.github.fintrack.workspace.workspace.model.Workspace;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

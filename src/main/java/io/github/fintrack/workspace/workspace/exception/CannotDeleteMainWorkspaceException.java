@@ -1,4 +1,4 @@
-package io.github.fintrack.workspace.exception;
+package io.github.fintrack.workspace.workspace.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
