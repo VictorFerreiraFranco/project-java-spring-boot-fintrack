@@ -14,8 +14,22 @@ drop table if exists refresh_tokens;
 CREATE TABLE refresh_tokens
 (
     id          uuid         not null primary key,
-    token       VARCHAR(255) NOT NULL UNIQUE,
-    expiry_date TIMESTAMP    NOT NULL,
-    user_id     uuid       NOT NULL,
+    token       varchar(255) not null unique,
+    expiry_date timestamp    not null,
+    user_id     uuid         not null,
     FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
+drop table if exists workspaces;
+CREATE TABLE workspaces
+(
+    id         uuid         not null primary key,
+    name       varchar(255) not null,
+    type       varchar(255) not null,
+    created_by uuid         not null,
+    created_at timestamp    not null,
+    deleted_by uuid         null,
+    deleted_at timestamp    null,
+    FOREIGN KEY (created_by) REFERENCES users (id),
+    FOREIGN KEY (deleted_by) REFERENCES users (id)
 );
