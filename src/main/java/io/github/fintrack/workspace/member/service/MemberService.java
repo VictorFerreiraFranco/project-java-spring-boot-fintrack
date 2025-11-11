@@ -1,6 +1,7 @@
 package io.github.fintrack.workspace.member.service;
 
 import io.github.fintrack.auth.model.User;
+import io.github.fintrack.workspace.invite.model.Invite;
 import io.github.fintrack.workspace.member.model.Member;
 import io.github.fintrack.workspace.member.model.Role;
 import io.github.fintrack.workspace.member.repository.MemberRepository;
@@ -44,6 +45,15 @@ public class MemberService {
                 .workspace(workspace)
                 .role(Role.OWNER)
                 .createdBy(user)
+                .build();
+        this.save(member);
+    }
+
+    public void createByInvite(Invite invite) {
+        Member member = Member.builder()
+                .user(invite.getTo())
+                .workspace(invite.getWorkspace())
+                .role(Role.MEMBER)
                 .build();
         this.save(member);
     }

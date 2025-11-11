@@ -1,5 +1,6 @@
 package io.github.fintrack.auth.controller.contract;
 
+import io.github.fintrack.auth.exception.UserNotFoundException;
 import io.github.fintrack.common.config.jwt.JwtService;
 import io.github.fintrack.auth.controller.dto.AuthenticationRequest;
 import io.github.fintrack.auth.controller.dto.AuthenticationResponse;
@@ -44,7 +45,7 @@ public class AuthenticationContract {
         );
 
         User user = userService.findByEmail(request.email())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(UserNotFoundException::new);
 
         return buildAuthenticationResponseWithNewToken(user);
     }

@@ -1,6 +1,6 @@
 -- create database fintrack;
 
-drop table if exists users;
+drop table if exists users cascade;
 create table users
 (
     id       uuid         not null primary key,
@@ -20,7 +20,7 @@ CREATE TABLE refresh_tokens
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-drop table if exists workspaces;
+drop table if exists workspaces cascade;
 CREATE TABLE workspaces
 (
     id         uuid         not null primary key,
@@ -34,7 +34,7 @@ CREATE TABLE workspaces
     FOREIGN KEY (deleted_by) REFERENCES users (id)
 );
 
-drop table if exists workspace_invites;
+drop table if exists workspace_invites cascade;
 CREATE TABLE workspace_invites
 (
     id           uuid         not null primary key,
@@ -51,7 +51,7 @@ CREATE TABLE workspace_invites
 );
 
 
-drop table if exists workspace_members;
+drop table if exists workspace_members cascade;
 CREATE TABLE workspace_members
 (
     id           uuid         not null primary key,

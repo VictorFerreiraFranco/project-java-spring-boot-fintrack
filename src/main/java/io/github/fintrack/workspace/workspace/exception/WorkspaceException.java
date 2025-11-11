@@ -1,6 +1,8 @@
 package io.github.fintrack.workspace.workspace.exception;
 
-public class WorkspaceException extends RuntimeException {
+import io.github.fintrack.common.exception.FinTrackMappedException;
+
+public class WorkspaceException extends FinTrackMappedException {
     public WorkspaceException(String message) {
         super(message);
     }

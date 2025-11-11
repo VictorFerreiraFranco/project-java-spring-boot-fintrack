@@ -19,4 +19,6 @@ public interface MemberRepository extends JpaRepository<Member, UUID> {
     List<Member> findAllByWorkspaceAndRole(Workspace workspace, Role role);
 
     List<Member> findAllByWorkspaceAndDeletion_DeletedAtIsNull(Workspace workspace);
+
+
 }

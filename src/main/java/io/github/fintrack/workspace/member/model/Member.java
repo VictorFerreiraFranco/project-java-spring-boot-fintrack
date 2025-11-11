@@ -37,12 +37,4 @@ public class Member extends CreatedAndDeleteEntity {
     public boolean isOwner() {
         return Role.OWNER.equals(this.getRole());
     }
-
-    public boolean isMember() {
-        return Role.MEMBER.equals(this.getRole());
-    }
-
-    public boolean isViewer() {
-        return Role.VIEWER.equals(this.getRole());
-    }
 }

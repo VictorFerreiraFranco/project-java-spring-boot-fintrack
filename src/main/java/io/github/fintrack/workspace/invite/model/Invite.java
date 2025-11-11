@@ -2,15 +2,14 @@ package io.github.fintrack.workspace.invite.model;
 
 import io.github.fintrack.common.model.CreatedEntity;
 import io.github.fintrack.auth.model.User;
+import io.github.fintrack.workspace.member.model.Role;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -31,4 +30,8 @@ public class Invite extends CreatedEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
+
+    public boolean isPending() {
+        return Status.PENDING.equals(status);
+    }
 }

@@ -67,6 +67,21 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(FinTrackMappedException.class)
+    public ResponseEntity<ErrorDetails> handleFinTrackMappedExceptionException(
+            FinTrackMappedException ex, WebRequest request) {
+
+        log.info("Error {}", ex.getMessage(), ex);
+
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                "Error",
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> handleGlobalException(
             Exception ex, WebRequest request) {

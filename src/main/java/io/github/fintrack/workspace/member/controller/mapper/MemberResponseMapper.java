@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface MemberResponseMapper {
+
     @Mapping(target = "userId", expression = "java( member.getUser().getId() )")
     @Mapping(target = "name", expression = "java( member.getUser().getName() )")
     @Mapping(target = "email", expression = "java( member.getUser().getEmail() )")
