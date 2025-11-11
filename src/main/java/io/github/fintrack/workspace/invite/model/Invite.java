@@ -1,8 +1,7 @@
 package io.github.fintrack.workspace.invite.model;
 
-import io.github.fintrack._common.model.CreatedEntity;
+import io.github.fintrack.common.model.CreatedEntity;
 import io.github.fintrack.auth.model.User;
-import io.github.fintrack.workspace.invite.StatusInvite;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,5 +30,5 @@ public class Invite extends CreatedEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private StatusInvite status;
+    private Status status;
 }

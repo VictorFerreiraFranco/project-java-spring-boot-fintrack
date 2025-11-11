@@ -1,6 +1,6 @@
 package io.github.fintrack.auth.validator;
 
-import io.github.fintrack._common.exception.DuplicateRecordException;
+import io.github.fintrack.common.exception.DuplicateRecordException;
 import io.github.fintrack.auth.model.User;
 import io.github.fintrack.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ public class UserValidator {
 
     private final UserRepository userRepository;
 
-    public void validate(User user) {
+    public void validToSave(User user) {
         if (userExists(user))
             throw new DuplicateRecordException("User already exists");
     }
@@ -27,5 +27,4 @@ public class UserValidator {
 
         return userFund.isPresent() && !userFund.get().getId().equals(user.getId());
     }
-
 }

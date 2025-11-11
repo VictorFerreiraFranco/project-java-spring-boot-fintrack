@@ -6,7 +6,6 @@ import io.github.fintrack.auth.model.User;
 import io.github.fintrack.auth.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,28 +21,38 @@ public class RefreshTokenService {
     private Long refreshTokenDurationMs;
 
     private final RefreshTokenRepository refreshTokenRepository;
-    private final UserService userService;
 
     public Optional<RefreshToken> findByToken(String token) {
         return refreshTokenRepository.findByToken(token);
     }
 
+    public RefreshToken save(RefreshToken refreshToken) {
+        return refreshTokenRepository.save(refreshToken);
+    }
+
+    public void delete(RefreshToken refreshToken) {
+        refreshTokenRepository.delete(refreshToken);
+    }
+
+    public void deleteByUser(User user) {
+        refreshTokenRepository.deleteByUser(user);
+    }
+
     @Transactional
     public RefreshToken createByUser(User user) {
+        this.deleteByUser(user);
+
         RefreshToken refreshToken = RefreshToken.builder()
                 .user(user)
                 .expiryDate(Instant.now().plusMillis(refreshTokenDurationMs))
                 .token(UUID.randomUUID().toString())
                 .build();
-
-        refreshTokenRepository.deleteByUser(user);
-        
-        return refreshTokenRepository.save(refreshToken);
+        return this.save(refreshToken);
     }
 
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token.getExpiryDate().isBefore(Instant.now())) {
-            refreshTokenRepository.delete(token);
+            this.delete(token);
             throw new TokenRefreshException(token.getToken(), "Refresh token was expired. Please make a new signing request");
         }
 

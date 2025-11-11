@@ -1,14 +1,18 @@
 package io.github.fintrack.workspace.workspace.controller.contract;
 
-import io.github.fintrack._common.exception.ResourceNotFoundException;
+import io.github.fintrack.auth.model.User;
+import io.github.fintrack.auth.service.AuthService;
 import io.github.fintrack.workspace.workspace.controller.dto.WorkspaceRequest;
+import io.github.fintrack.workspace.workspace.controller.dto.WorkspaceResponse;
 import io.github.fintrack.workspace.workspace.controller.mapper.WorkspaceRequestMapper;
-import io.github.fintrack.workspace.workspace.model.Type;
+import io.github.fintrack.workspace.workspace.controller.mapper.WorkspaceResponseMapper;
+import io.github.fintrack.workspace.workspace.exception.WorkspaceNotFoundException;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import io.github.fintrack.workspace.workspace.service.WorkspaceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -16,31 +20,44 @@ import java.util.UUID;
 public class WorkspaceContract {
 
     private final WorkspaceRequestMapper workspaceRequestMapper;
-    private final WorkspaceService  workspaceService;
+    private final WorkspaceResponseMapper workspaceResponseMapper;
+    private final WorkspaceService workspaceService;
+    private final AuthService authService;
 
-    public Workspace getWorkspace(String id) {
-        return workspaceService.findByIdAndDeletedAtIsNull(UUID.fromString(id))
-                .orElseThrow(this::getWorkspaceNotFoundException);
+    public WorkspaceResponse findById(String id) {
+        return workspaceResponseMapper.toDto(
+            workspaceService.findByIdAndDeletedAtIsNull(UUID.fromString(id))
+                .orElseThrow(WorkspaceNotFoundException::new)
+        );
     }
 
-    public Workspace create(WorkspaceRequest request) {
-        Workspace workspace = workspaceRequestMapper.toEntity(request);
-        workspace.setType(Type.OTHER);
-        workspaceService.save(workspace);
-        return workspace;
+    public List<WorkspaceResponse> findByUserLoggedId() {
+        return workspaceService.findAllByMembersUserAndDeletedAtIsNull(authService.getUserLoggedIn())
+                .stream()
+                .map(workspaceResponseMapper::toDto)
+                .toList();
     }
 
-    public Workspace update(String id, WorkspaceRequest request) {
-        Workspace workspaceRequest = workspaceRequestMapper.toEntity(request);
+    public WorkspaceResponse create(WorkspaceRequest request) {
+        return workspaceResponseMapper.toDto(
+            workspaceService.createOther(
+                request.name(),
+                authService.getUserLoggedIn()
+            )
+        );
+    }
 
+    public WorkspaceResponse update(String id, WorkspaceRequest request) {
         return workspaceService.findByIdAndDeletedAtIsNull(UUID.fromString(id))
                 .map(workspace -> {
+                    Workspace workspaceRequest = workspaceRequestMapper.toEntity(request);
+
                     workspace.setName(workspaceRequest.getName());
                     workspaceService.save(workspace);
 
-                    return workspace;
+                    return workspaceResponseMapper.toDto(workspace);
                 })
-                .orElseThrow(this::getWorkspaceNotFoundException);
+                .orElseThrow(WorkspaceNotFoundException::new);
     }
 
     public void delete(String id) {
@@ -49,10 +66,6 @@ public class WorkspaceContract {
                     workspaceService.delete(workspace);
                     return workspace;
                 })
-                .orElseThrow(this::getWorkspaceNotFoundException);
-    }
-
-    private ResourceNotFoundException getWorkspaceNotFoundException() {
-        return new ResourceNotFoundException("Workspace not found");
+                .orElseThrow(WorkspaceNotFoundException::new);
     }
 }

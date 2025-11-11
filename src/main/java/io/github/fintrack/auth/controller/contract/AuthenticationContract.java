@@ -1,6 +1,6 @@
 package io.github.fintrack.auth.controller.contract;
 
-import io.github.fintrack._common.config.auth.jwt.JwtService;
+import io.github.fintrack.common.config.jwt.JwtService;
 import io.github.fintrack.auth.controller.dto.AuthenticationRequest;
 import io.github.fintrack.auth.controller.dto.AuthenticationResponse;
 import io.github.fintrack.auth.controller.dto.RegisterRequest;
@@ -11,16 +11,11 @@ import io.github.fintrack.auth.model.RefreshToken;
 import io.github.fintrack.auth.model.User;
 import io.github.fintrack.auth.service.RefreshTokenService;
 import io.github.fintrack.auth.service.UserService;
-import io.github.fintrack.workspace.workspace.model.Type;
-import io.github.fintrack.workspace.workspace.model.Workspace;
-import io.github.fintrack.workspace.workspace.service.WorkspaceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -28,26 +23,16 @@ public class AuthenticationContract {
 
     private final UserService userService;
     private final RefreshTokenService refreshTokenService;
-    private final WorkspaceService workspaceService;
-    private final RegisterRequestMapper userMapper;
+    private final RegisterRequestMapper registerRequestMapper;
     private final AuthenticationManager authenticationManager;
-    private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    @Transactional
     public AuthenticationResponse register(RegisterRequest request) {
-        User user = userMapper.toEntity(request);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userService.save(user);
-
-        Workspace workspace = Workspace.builder()
-                .name("Principal")
-                .type(Type.MAIN)
-                .createdBy(user)
-                .build();
-        workspaceService.save(workspace);
-
-        return buildAuthenticationResponseWithNewToken(user);
+        return buildAuthenticationResponseWithNewToken(
+            userService.registerUser(
+                registerRequestMapper.toEntity(request)
+            )
+        );
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {

@@ -4,11 +4,15 @@ import io.github.fintrack.auth.model.Role;
 import io.github.fintrack.auth.model.User;
 import io.github.fintrack.auth.repository.UserRepository;
 import io.github.fintrack.auth.validator.UserValidator;
+import io.github.fintrack.workspace.member.service.MemberService;
+import io.github.fintrack.workspace.workspace.model.Workspace;
+import io.github.fintrack.workspace.workspace.service.WorkspaceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -16,19 +20,26 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserValidator userValidator;
-
-    public Optional<User> findById(UUID id) {
-        return userRepository.findById(id);
-    }
+    private final PasswordEncoder passwordEncoder;
+    private final WorkspaceService workspaceService;
 
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
     public void save(User user) {
-        user.setRole(Role.USER);
-
-        userValidator.validate(user);
+        userValidator.validToSave(user);
         userRepository.save(user);
+    }
+
+    @Transactional
+    public User registerUser(User user) {
+        user.setRole(Role.USER);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        this.save(user);
+
+        workspaceService.createMain(user);
+
+        return user;
     }
 }

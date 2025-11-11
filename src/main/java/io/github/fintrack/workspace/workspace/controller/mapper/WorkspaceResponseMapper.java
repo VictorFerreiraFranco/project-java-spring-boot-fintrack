@@ -7,7 +7,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface WorkspaceResponseMapper {
-
     @Mapping(target = "created", expression = "java( entity.getCreation().getCreatedAt() )")
     WorkspaceResponse toDto(Workspace entity);
 }

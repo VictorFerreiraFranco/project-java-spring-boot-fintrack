@@ -1,15 +1,15 @@
 package io.github.fintrack.workspace.workspace.controller;
 
-import io.github.fintrack._common.controller.GenericController;
+import io.github.fintrack.common.controller.GenericController;
 import io.github.fintrack.workspace.workspace.controller.contract.WorkspaceContract;
 import io.github.fintrack.workspace.workspace.controller.dto.WorkspaceRequest;
 import io.github.fintrack.workspace.workspace.controller.dto.WorkspaceResponse;
-import io.github.fintrack.workspace.workspace.controller.mapper.WorkspaceResponseMapper;
-import io.github.fintrack.workspace.workspace.model.Workspace;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/workspaces")
@@ -17,25 +17,28 @@ import org.springframework.web.bind.annotation.*;
 public class WorkspaceController implements GenericController {
 
     private final WorkspaceContract contract;
-    private final WorkspaceResponseMapper workspaceResponseMapper;
 
     @GetMapping("{id}")
-    public ResponseEntity<WorkspaceResponse> getWorkspace(
+    public ResponseEntity<WorkspaceResponse> findById(
             @PathVariable String id
     ) {
-        Workspace workspace = contract.getWorkspace(id);
-        return ResponseEntity
-                .ok(workspaceResponseMapper.toDto(workspace));
+        return ResponseEntity.ok(contract.findById(id));
+    }
+
+    @GetMapping("my")
+    public ResponseEntity<List<WorkspaceResponse>> findByUserLoggedId() {
+        return ResponseEntity.ok(contract.findByUserLoggedId());
     }
 
     @PostMapping
     public ResponseEntity<WorkspaceResponse> create(
             @Valid @RequestBody WorkspaceRequest request
     ){
-        Workspace workspace = contract.create(request);
+        WorkspaceResponse workspaceResponse = contract.create(request);
+
         return ResponseEntity
-                .created(buildHeaderLocation(workspace.getId()))
-                .body(workspaceResponseMapper.toDto(workspace));
+                .created(buildHeaderLocation(workspaceResponse.getId()))
+                .body(workspaceResponse);
     }
 
     @PatchMapping("{id}")
@@ -43,9 +46,8 @@ public class WorkspaceController implements GenericController {
             @PathVariable String id,
             @Valid @RequestBody WorkspaceRequest request
     ){
-        Workspace workspace = contract.update(id, request);
         return ResponseEntity
-                .ok(workspaceResponseMapper.toDto(workspace));
+                .ok(contract.update(id, request));
     }
 
     @DeleteMapping("{id}")

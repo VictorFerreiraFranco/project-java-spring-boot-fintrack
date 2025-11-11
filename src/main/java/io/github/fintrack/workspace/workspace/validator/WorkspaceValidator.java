@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class WorkspaceValidator {
-    public void validateDelete(Workspace workspace) {
+    public void validToDelete(Workspace workspace) {
         if (isMain(workspace))
             throw new CannotDeleteMainWorkspaceException();
     }
