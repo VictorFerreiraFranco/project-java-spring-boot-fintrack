@@ -43,6 +43,7 @@ public class MemberService {
                 .user(user)
                 .workspace(workspace)
                 .role(Role.OWNER)
+                .createdBy(user)
                 .build();
         this.save(member);
     }

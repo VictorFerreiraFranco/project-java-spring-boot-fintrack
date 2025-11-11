@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Data
-@Builder
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,6 +25,14 @@ public class Member extends CreatedAndDeleteEntity {
     @Enumerated(EnumType.STRING)
     @Column
     private Role role;
+
+    @Builder
+    public Member(Workspace workspace, User user, Role role, User createdBy) {
+        this.workspace = workspace;
+        this.user = user;
+        this.role = role;
+        this.getCreation().setCreatedBy(createdBy);
+    }
 
     public boolean isOwner() {
         return Role.OWNER.equals(this.getRole());
