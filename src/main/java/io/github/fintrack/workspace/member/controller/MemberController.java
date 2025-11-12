@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberController {
 
-    private MemberContract contract;
+    private final MemberContract contract;
 
     @GetMapping("/{id}")
     public ResponseEntity<MemberResponse> findById(

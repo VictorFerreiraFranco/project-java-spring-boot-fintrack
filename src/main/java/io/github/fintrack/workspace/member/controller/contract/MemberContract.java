@@ -8,6 +8,7 @@ import io.github.fintrack.workspace.workspace.exception.WorkspaceNotFoundExcepti
 import io.github.fintrack.workspace.workspace.service.WorkspaceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,8 +19,9 @@ public class MemberContract {
 
     private final MemberService memberService;
     private final WorkspaceService workspaceService;
-    private MemberResponseMapper memberResponseMapper;
+    private final MemberResponseMapper memberResponseMapper;
 
+    @Transactional(readOnly = true)
     public MemberResponse findById(String id) {
         return memberResponseMapper.toDto(
                 memberService.findByIdAndDeletedAtIsNull(UUID.fromString(id))
@@ -27,15 +29,13 @@ public class MemberContract {
         );
     }
 
+    @Transactional(readOnly = true)
     public List<MemberResponse> findByWorkspaceId(String workspaceId) {
         return workspaceService.findByIdAndDeletedAtIsNull(UUID.fromString(workspaceId))
-                .map(workspace -> {
-                    return memberService.findAllByWorkspaceAndDeletedAtIsNull(workspace)
-                          .stream()
-                          .map(memberResponseMapper::toDto)
-                          .toList();
-
-                })
+                .map(workspace -> memberService.findAllByWorkspaceAndDeletedAtIsNull(workspace)
+                      .stream()
+                      .map(memberResponseMapper::toDto)
+                      .toList())
                 .orElseThrow(WorkspaceNotFoundException::new);
     }
 

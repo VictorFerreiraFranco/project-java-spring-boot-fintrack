@@ -3,13 +3,13 @@ package io.github.fintrack.workspace.invite.controller.mapper;
 import io.github.fintrack.auth.controller.mapper.UserResponseMapper;
 import io.github.fintrack.workspace.invite.controller.dto.InviteResponse;
 import io.github.fintrack.workspace.invite.model.Invite;
-import io.github.fintrack.workspace.workspace.controller.mapper.WorkspaceSingleResponseMapper;
+import io.github.fintrack.workspace.workspace.controller.mapper.WorkspaceMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(
         componentModel = "spring",
-        uses = {WorkspaceSingleResponseMapper.class, UserResponseMapper.class}
+        uses = {WorkspaceMapper.class, UserResponseMapper.class}
 )
 public interface InviteResponseMapper {
 

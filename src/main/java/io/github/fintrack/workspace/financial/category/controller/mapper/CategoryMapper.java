@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CategoryMapper {
     @Mapping(target = "created", expression = "java( category.getCreation().getCreatedAt() )")
     CategoryResponse toDto(Category category);
