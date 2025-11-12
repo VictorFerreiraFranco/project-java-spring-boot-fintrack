@@ -1,8 +1,7 @@
 package io.github.fintrack.workspace.financial.category.controller.mapper;
 
-import io.github.fintrack.workspace.financial.category.controller.dto.CategoryRegisterRequest;
+import io.github.fintrack.workspace.financial.category.controller.dto.CategoryRequest;
 import io.github.fintrack.workspace.financial.category.controller.dto.CategoryResponse;
-import io.github.fintrack.workspace.financial.category.controller.dto.CategoryUpdateRequest;
 import io.github.fintrack.workspace.financial.category.model.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,11 +12,11 @@ public interface CategoryMapper {
     @Mapping(target = "created", expression = "java( category.getCreation().getCreatedAt() )")
     CategoryResponse toDto(Category category);
 
-    Category toEntity(CategoryRegisterRequest request);
+    Category toEntity(CategoryRequest request);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "workspace", ignore = true)
     @Mapping(target = "creation", ignore = true)
     @Mapping(target = "deletion", ignore = true)
-    void updateEntity(@MappingTarget Category entity, CategoryUpdateRequest request);
+    void updateEntity(@MappingTarget Category entity, CategoryRequest request);
 }

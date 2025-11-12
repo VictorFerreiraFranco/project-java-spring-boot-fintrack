@@ -1,8 +1,7 @@
 package io.github.fintrack.workspace.financial.category.controller.contract;
 
-import io.github.fintrack.workspace.financial.category.controller.dto.CategoryRegisterRequest;
-import io.github.fintrack.workspace.financial.category.controller.dto.CategoryResponse;
-import io.github.fintrack.workspace.financial.category.controller.dto.CategoryUpdateRequest;
+import io.github.fintrack.transaction.model.Type;
+import io.github.fintrack.workspace.financial.category.controller.dto.*;
 import io.github.fintrack.workspace.financial.category.controller.mapper.CategoryMapper;
 import io.github.fintrack.workspace.financial.category.exception.CategoryNotFoundException;
 import io.github.fintrack.workspace.financial.category.model.Category;
@@ -13,7 +12,9 @@ import io.github.fintrack.workspace.workspace.service.WorkspaceService;
 import io.github.fintrack.workspace.workspace.validator.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,39 +27,46 @@ public class CategoryContract {
     private final CategoryMapper categoryMapper;
     private final WorkspaceValidator workspaceValidator;
 
+    @Transactional(readOnly = true)
     public CategoryResponse getById(String id) {
         return categoryMapper.toDto(
             this.findById(id)
         );
     }
 
-    public List<CategoryResponse> getAllByWorkspace(String workspaceId) {
-        Workspace workspace = this.findWorkspaceById(workspaceId);
-
-        workspaceValidator.userLoggedInIsNotMemberByWorkspace(workspace);
-
-        return categoryService.findAllByWorkspaceAndDeletedAtIsNull(workspace)
+    @Transactional(readOnly = true)
+    public List<CategoryResponse> searchAllByWorkspace(String workspaceId, CategoryFilter filter) {
+        return categoryService.searchAllByWorkspace(this.findWorkspaceById(workspaceId), filter)
                 .stream()
                 .map(categoryMapper::toDto)
                 .toList();
     }
 
-    public CategoryResponse register(CategoryRegisterRequest request) {
-        Category entity = categoryMapper.toEntity(request);
-        entity.setWorkspace(findWorkspaceById(request.workspaceId));
-
-        return categoryMapper.toDto(categoryService.save(entity));
+    public List<CategoryTypeResponse> getTypes() {
+        return Arrays.stream(Type.values())
+                .map(type -> new CategoryTypeResponse(type, type.getDescription()))
+                .toList();
     }
 
-    public CategoryResponse update(String id, CategoryUpdateRequest request) {
+    @Transactional()
+    public CategoryResponse register(String workspaceId, CategoryRequest request) {
+        Category entity = categoryMapper.toEntity(request);
+        entity.setWorkspace(this.findWorkspaceById(workspaceId));
+        return categoryMapper.toDto(
+                categoryService.save(entity)
+        );
+    }
+
+    @Transactional()
+    public CategoryResponse update(String id, CategoryRequest request) {
         Category category = this.findById(id);
         categoryMapper.updateEntity(category, request);
-
         return categoryMapper.toDto(
                 categoryService.save(category)
         );
     }
 
+    @Transactional()
     public void delete(String id) {
         categoryService.delete(
                 this.findById(id)
@@ -75,7 +83,11 @@ public class CategoryContract {
     }
 
     private Workspace findWorkspaceById(String workspaceId) {
-        return workspaceService.findByIdAndDeletedAtIsNull(UUID.fromString(workspaceId))
+        Workspace workspace = workspaceService.findByIdAndDeletedAtIsNull(UUID.fromString(workspaceId))
                 .orElseThrow(WorkspaceNotFoundException::new);
+
+        workspaceValidator.userLoggedInIsNotMemberByWorkspace(workspace);
+
+        return workspace;
     }
 }

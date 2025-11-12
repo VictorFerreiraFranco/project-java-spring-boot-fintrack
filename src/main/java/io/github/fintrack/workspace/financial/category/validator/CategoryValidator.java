@@ -29,9 +29,10 @@ public class CategoryValidator {
 
     public boolean categoryExists(Category category) {
         Optional<Category> optionalCategory = categoryRepository
-                .findByWorkspaceAndDescriptionIgnoreCaseAndDeletion_DeletedAtIsNull(
+                .findByWorkspaceAndDescriptionIgnoreCaseAndTypeAndDeletion_DeletedAtIsNull(
                         category.getWorkspace(),
-                        category.getDescription()
+                        category.getDescription(),
+                        category.getType()
                 );
 
         if (category.getId() == null)

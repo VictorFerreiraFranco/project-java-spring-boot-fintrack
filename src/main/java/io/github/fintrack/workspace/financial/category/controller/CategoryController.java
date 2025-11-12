@@ -3,16 +3,13 @@ package io.github.fintrack.workspace.financial.category.controller;
 import io.github.fintrack.common.annotation.validator.uuid.ValidUUID;
 import io.github.fintrack.common.controller.GenericController;
 import io.github.fintrack.workspace.financial.category.controller.contract.CategoryContract;
-import io.github.fintrack.workspace.financial.category.controller.dto.CategoryRegisterRequest;
-import io.github.fintrack.workspace.financial.category.controller.dto.CategoryResponse;
-import io.github.fintrack.workspace.financial.category.controller.dto.CategoryUpdateRequest;
+import io.github.fintrack.workspace.financial.category.controller.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/categories")
@@ -29,17 +26,24 @@ public class CategoryController implements GenericController {
     }
 
     @GetMapping("/workspace/{workspaceId}")
-    public ResponseEntity<List<CategoryResponse>> getAllByWorkspace(
-            @ValidUUID @PathVariable("workspaceId") String workspaceId
-    ) {
-        return ResponseEntity.ok(contract.getAllByWorkspace(workspaceId));
+    public ResponseEntity<List<CategoryResponse>> searchAllByWorkspace(
+            @ValidUUID @PathVariable("workspaceId") String workspaceId,
+            @RequestBody CategoryFilter filter
+            ) {
+        return ResponseEntity.ok(contract.searchAllByWorkspace(workspaceId, filter));
     }
 
-    @PostMapping
+    @GetMapping("/types")
+    public ResponseEntity<List<CategoryTypeResponse>> getById() {
+        return ResponseEntity.ok(contract.getTypes());
+    }
+
+    @PostMapping("/workspace/{workspaceId}")
     public ResponseEntity<CategoryResponse> register(
-            @Valid @RequestBody CategoryRegisterRequest request
+            @ValidUUID @PathVariable("workspaceId") String workspaceId,
+            @Valid @RequestBody CategoryRequest request
     ) {
-        CategoryResponse categoryResponse = contract.register(request);
+        CategoryResponse categoryResponse = contract.register(workspaceId, request);
         return ResponseEntity
                 .created(this.buildHeaderLocation(categoryResponse.id()))
                 .body(categoryResponse);
@@ -48,7 +52,7 @@ public class CategoryController implements GenericController {
     @PatchMapping("/{id}")
     public ResponseEntity<CategoryResponse> update(
             @ValidUUID @PathVariable("id") String id,
-            @Valid @RequestBody CategoryUpdateRequest request
+            @Valid @RequestBody CategoryRequest request
     ) {
         return ResponseEntity.ok(contract.update(id, request));
     }
