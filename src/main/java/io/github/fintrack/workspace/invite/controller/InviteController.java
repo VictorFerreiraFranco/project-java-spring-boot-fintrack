@@ -20,22 +20,22 @@ public class InviteController implements GenericController {
     private final InviteContract contract;
 
     @GetMapping("/{id}")
-    public ResponseEntity<InviteResponse> findById(
+    public ResponseEntity<InviteResponse> getById(
             @ValidUUID @PathVariable String id
     ) {
-        return ResponseEntity.ok(contract.findById(id));
+        return ResponseEntity.ok(contract.getById(id));
     }
 
     @GetMapping("/pending/workspace/{workspaceId}")
-    public ResponseEntity<List<InviteResponse>> findAllIsPendingByWorkspace(
+    public ResponseEntity<List<InviteResponse>> getAllIsPendingByWorkspace(
             @ValidUUID @PathVariable String workspaceId
     ) {
-        return ResponseEntity.ok(contract.findAllIsPendingByWorkspace(workspaceId));
+        return ResponseEntity.ok(contract.getAllIsPendingByWorkspace(workspaceId));
     }
 
     @GetMapping("/pending/my")
-    public ResponseEntity<List<InviteResponse>> findAllIsPendingByUserLoggedIn() {
-        return ResponseEntity.ok(contract.findAllIsPendingByUserLoggedIn());
+    public ResponseEntity<List<InviteResponse>> getAllIsPendingByUserLoggedIn() {
+        return ResponseEntity.ok(contract.getAllIsPendingByUserLoggedIn());
     }
 
     @PostMapping
@@ -56,7 +56,7 @@ public class InviteController implements GenericController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/refused/{id}")
+    @PutMapping("/refuse/{id}")
     public ResponseEntity<Void> refused(
             @ValidUUID @PathVariable String id
     ) {

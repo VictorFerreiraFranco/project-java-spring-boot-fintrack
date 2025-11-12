@@ -17,17 +17,17 @@ public class MemberController {
     private final MemberContract contract;
 
     @GetMapping("/{id}")
-    public ResponseEntity<MemberResponse> findById(
+    public ResponseEntity<MemberResponse> getById(
             @ValidUUID @PathVariable String id
     ) {
-        return ResponseEntity.ok(contract.findById(id));
+        return ResponseEntity.ok(contract.getById(id));
     }
 
     @GetMapping("/workspaces/{workspaceId}")
-    public ResponseEntity<List<MemberResponse>> findByWorkspaceId(
+    public ResponseEntity<List<MemberResponse>> getByWorkspaceId(
             @ValidUUID @PathVariable String workspaceId
     ) {
-        return ResponseEntity.ok(contract.findByWorkspaceId(workspaceId));
+        return ResponseEntity.ok(contract.getByWorkspaceId(workspaceId));
     }
 
     @DeleteMapping("/{id}")

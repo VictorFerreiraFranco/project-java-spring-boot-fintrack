@@ -8,6 +8,7 @@ import io.github.fintrack.workspace.workspace.controller.mapper.WorkspaceMapper;
 import io.github.fintrack.workspace.workspace.exception.WorkspaceNotFoundException;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import io.github.fintrack.workspace.workspace.service.WorkspaceService;
+import io.github.fintrack.workspace.workspace.validator.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,17 +23,17 @@ public class WorkspaceContract {
     private final WorkspaceService workspaceService;
     private final AuthService authService;
     private final WorkspaceMapper workspaceMapper;
+    private final WorkspaceValidator workspaceValidator;
 
     @Transactional(readOnly = true)
-    public WorkspaceDetailsResponse findById(String id) {
+    public WorkspaceDetailsResponse getById(String id) {
         return workspaceMapper.toDetailsResponse(
-            workspaceService.findByIdAndDeletedAtIsNull(UUID.fromString(id))
-                .orElseThrow(WorkspaceNotFoundException::new)
+            this.findById(id)
         );
     }
 
     @Transactional(readOnly = true)
-    public List<WorkspaceDetailsResponse> findByUserLoggedId() {
+    public List<WorkspaceDetailsResponse> getByUserLoggedId() {
         return workspaceService.findAllByMembersUserAndDeletedAtIsNull(authService.getUserLoggedIn())
                 .stream()
                 .map(workspaceMapper::toDetailsResponse)
@@ -48,25 +49,31 @@ public class WorkspaceContract {
         );
     }
 
+    @Transactional
     public WorkspaceSingleResponse update(String id, WorkspaceRequest request) {
-        return workspaceService.findByIdAndDeletedAtIsNull(UUID.fromString(id))
-                .map(workspace -> {
-                    Workspace workspaceRequest = workspaceMapper.toEntity(request);
+        Workspace workspaceRequest = workspaceMapper.toEntity(request);
 
-                    workspace.setName(workspaceRequest.getName());
-                    workspaceService.save(workspace);
+        Workspace workspace = this.findById(id);
+        workspace.setName(workspaceRequest.getName());
 
-                    return workspaceMapper.toSingleResponse(workspace);
-                })
-                .orElseThrow(WorkspaceNotFoundException::new);
+        return workspaceMapper.toSingleResponse(
+                workspaceService.save(workspace)
+        );
     }
 
+    @Transactional
     public void delete(String id) {
-        workspaceService.findByIdAndDeletedAtIsNull(UUID.fromString(id))
-                .map(workspace -> {
-                    workspaceService.delete(workspace);
-                    return workspace;
-                })
+        workspaceService.delete(
+                this.findById(id)
+        );
+    }
+
+    private Workspace findById(String id) {
+        Workspace workspace = workspaceService.findByIdAndDeletedAtIsNull(UUID.fromString(id))
                 .orElseThrow(WorkspaceNotFoundException::new);
+
+        workspaceValidator.validUserLoggedInIsMemberByWorkspace(workspace);
+
+        return workspace;
     }
 }

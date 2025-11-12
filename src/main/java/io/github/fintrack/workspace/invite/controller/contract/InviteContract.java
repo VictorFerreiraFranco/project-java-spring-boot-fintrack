@@ -13,6 +13,7 @@ import io.github.fintrack.workspace.invite.service.InviteService;
 import io.github.fintrack.workspace.workspace.exception.WorkspaceNotFoundException;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import io.github.fintrack.workspace.workspace.service.WorkspaceService;
+import io.github.fintrack.workspace.workspace.validator.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,44 +30,40 @@ public class InviteContract {
     private final AuthService authService;
     private final UserService userService;
     private final InviteResponseMapper inviteResponseMapper;
+    private final WorkspaceValidator workspaceValidator;
 
     @Transactional(readOnly = true)
-    public InviteResponse findById(String id) {
-        return inviteService.findById(UUID.fromString(id))
-                .map(inviteResponseMapper::toDto)
-                .orElseThrow(InviteNotFoundException::new);
+    public InviteResponse getById(String id) {
+        return inviteResponseMapper.toDto(
+                this.findById(id)
+        );
     }
 
     @Transactional(readOnly = true)
-    public List<InviteResponse> findAllIsPendingByWorkspace(String workspaceId) {
-        Workspace workspace = workspaceService.findByIdAndDeletedAtIsNull(UUID.fromString(workspaceId))
-                .orElseThrow(WorkspaceNotFoundException::new);
-
-        return inviteService.findAllIsPendingByWorkspace(workspace)
+    public List<InviteResponse> getAllIsPendingByWorkspace(String workspaceId) {
+        return inviteService.findAllIsPendingByWorkspace(this.findWorkspaceById(workspaceId))
                 .stream()
                 .map(inviteResponseMapper::toDto)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<InviteResponse> findAllIsPendingByUserLoggedIn() {
+    public List<InviteResponse> getAllIsPendingByUserLoggedIn() {
         return inviteService.findAllIsPendingByUser(authService.getUserLoggedIn())
                 .stream()
                 .map(inviteResponseMapper::toDto)
                 .toList();
     }
 
+    @Transactional
     public InviteResponse register(InviteRequest request) {
         User userTo = userService.findByEmail(request.email())
                 .orElseThrow(UserNotFoundException::new);
 
-        Workspace workspace = workspaceService.findByIdAndDeletedAtIsNull(UUID.fromString(request.workspaceId()))
-                .orElseThrow(WorkspaceNotFoundException::new);
-
         Invite invite = Invite.builder()
                 .from(authService.getUserLoggedIn())
                 .to(userTo)
-                .workspace(workspace)
+                .workspace((this.findWorkspaceById(request.workspaceId())))
                 .build();
 
         return inviteResponseMapper.toDto(
@@ -74,24 +71,38 @@ public class InviteContract {
         );
     }
 
+    @Transactional
     public void accept(String id) {
         inviteService.acceptInvite(
-                inviteService.findById(UUID.fromString(id))
-                        .orElseThrow(InviteNotFoundException::new)
+            this.findById(id)
         );
     }
 
+    @Transactional
     public void refused(String id) {
         inviteService.refuseInvite(
-                inviteService.findById(UUID.fromString(id))
-                        .orElseThrow(InviteNotFoundException::new)
+                this.findById(id)
         );
     }
 
+    @Transactional
     public void canceled(String id) {
         inviteService.canceledInvite(
-                inviteService.findById(UUID.fromString(id))
-                        .orElseThrow(InviteNotFoundException::new)
+                this.findById(id)
         );
+    }
+
+    private Invite findById(String id) {
+        return inviteService.findById(UUID.fromString(id))
+                .orElseThrow(InviteNotFoundException::new);
+    }
+
+    private Workspace findWorkspaceById(String id) {
+        Workspace workspace = workspaceService.findByIdAndDeletedAtIsNull(UUID.fromString(id))
+                .orElseThrow(WorkspaceNotFoundException::new);
+
+        workspaceValidator.validUserLoggedInIsMemberByWorkspace(workspace);
+
+        return workspace;
     }
 }

@@ -32,8 +32,8 @@ public class WorkspaceService {
         return workspaceRepository.findAllByMembers_UserAndDeletion_DeletedAtIsNull(user);
     }
 
-    public void save(Workspace workspace) {
-        workspaceRepository.save(workspace);
+    public Workspace save(Workspace workspace) {
+        return workspaceRepository.save(workspace);
     }
 
     public void delete(Workspace workspace) {

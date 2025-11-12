@@ -10,6 +10,7 @@ import io.github.fintrack.workspace.financial.category.service.CategoryService;
 import io.github.fintrack.workspace.workspace.exception.WorkspaceNotFoundException;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import io.github.fintrack.workspace.workspace.service.WorkspaceService;
+import io.github.fintrack.workspace.workspace.validator.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,15 +24,20 @@ public class CategoryContract {
     private final CategoryService categoryService;
     private final WorkspaceService workspaceService;
     private final CategoryMapper categoryMapper;
+    private final WorkspaceValidator workspaceValidator;
 
     public CategoryResponse getById(String id) {
         return categoryMapper.toDto(
-            this.finById(id)
+            this.findById(id)
         );
     }
 
     public List<CategoryResponse> getAllByWorkspace(String workspaceId) {
-        return categoryService.findAllByWorkspaceAndDeletedAtIsNull(this.findWorkspaceById(workspaceId))
+        Workspace workspace = this.findWorkspaceById(workspaceId);
+
+        workspaceValidator.userLoggedInIsNotMemberByWorkspace(workspace);
+
+        return categoryService.findAllByWorkspaceAndDeletedAtIsNull(workspace)
                 .stream()
                 .map(categoryMapper::toDto)
                 .toList();
@@ -45,7 +51,7 @@ public class CategoryContract {
     }
 
     public CategoryResponse update(String id, CategoryUpdateRequest request) {
-        Category category = this.finById(id);
+        Category category = this.findById(id);
         categoryMapper.updateEntity(category, request);
 
         return categoryMapper.toDto(
@@ -55,14 +61,17 @@ public class CategoryContract {
 
     public void delete(String id) {
         categoryService.delete(
-                categoryService.findByIdAndDeletedAtIsNull(UUID.fromString(id))
-                        .orElseThrow(CategoryNotFoundException::new)
+                this.findById(id)
         );
     }
 
-    private Category finById(String id) {
-        return  categoryService.findByIdAndDeletedAtIsNull(UUID.fromString(id))
+    private Category findById(String id) {
+        Category category = categoryService.findByIdAndDeletedAtIsNull(UUID.fromString(id))
                 .orElseThrow(CategoryNotFoundException::new);
+
+        workspaceValidator.userLoggedInIsNotMemberByWorkspace(category.getWorkspace());
+
+        return category;
     }
 
     private Workspace findWorkspaceById(String workspaceId) {

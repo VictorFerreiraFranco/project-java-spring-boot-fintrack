@@ -23,17 +23,10 @@ public class CategoryService {
     private final AuthService authService;
 
     public Optional<Category> findByIdAndDeletedAtIsNull(UUID id) {
-        Optional<Category> optionalCategory = categoryRepository.findByIdAndDeletion_DeletedAtIsNull(id);
-
-        optionalCategory.ifPresent(
-            category -> workspaceValidator.userLoggedInIsNotMemberByWorkspace(category.getWorkspace())
-        );
-
-        return optionalCategory;
+        return categoryRepository.findByIdAndDeletion_DeletedAtIsNull(id);
     }
 
     public List<Category> findAllByWorkspaceAndDeletedAtIsNull(Workspace workspace) {
-        workspaceValidator.userLoggedInIsNotMemberByWorkspace(workspace);
         return categoryRepository.findAllByWorkspaceAndDeletion_DeletedAtIsNull(workspace);
     }
 

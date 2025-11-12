@@ -21,15 +21,15 @@ public class WorkspaceController implements GenericController {
     private final WorkspaceContract contract;
 
     @GetMapping("/{id}")
-    public ResponseEntity<WorkspaceDetailsResponse> findById(
+    public ResponseEntity<WorkspaceDetailsResponse> getById(
             @ValidUUID @PathVariable String id
     ) {
-        return ResponseEntity.ok(contract.findById(id));
+        return ResponseEntity.ok(contract.getById(id));
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<WorkspaceDetailsResponse>> findByUserLoggedId() {
-        return ResponseEntity.ok(contract.findByUserLoggedId());
+    public ResponseEntity<List<WorkspaceDetailsResponse>> getByUserLoggedId() {
+        return ResponseEntity.ok(contract.getByUserLoggedId());
     }
 
     @PostMapping
