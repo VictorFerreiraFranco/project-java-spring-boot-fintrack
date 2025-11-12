@@ -1,5 +1,6 @@
 package io.github.fintrack.workspace.workspace.controller;
 
+import io.github.fintrack.common.annotation.validator.uuid.ValidUUID;
 import io.github.fintrack.common.controller.GenericController;
 import io.github.fintrack.workspace.workspace.controller.contract.WorkspaceContract;
 import io.github.fintrack.workspace.workspace.controller.dto.WorkspaceDetailsResponse;
@@ -19,14 +20,14 @@ public class WorkspaceController implements GenericController {
 
     private final WorkspaceContract contract;
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<WorkspaceDetailsResponse> findById(
-            @PathVariable String id
+            @ValidUUID @PathVariable String id
     ) {
         return ResponseEntity.ok(contract.findById(id));
     }
 
-    @GetMapping("my")
+    @GetMapping("/my")
     public ResponseEntity<List<WorkspaceDetailsResponse>> findByUserLoggedId() {
         return ResponseEntity.ok(contract.findByUserLoggedId());
     }
@@ -42,18 +43,18 @@ public class WorkspaceController implements GenericController {
                 .body(workspaceResponse);
     }
 
-    @PatchMapping("{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<WorkspaceSingleResponse> update(
-            @PathVariable String id,
+            @ValidUUID @PathVariable String id,
             @Valid @RequestBody WorkspaceRequest request
     ){
         return ResponseEntity
                 .ok(contract.update(id, request));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-            @PathVariable String id
+            @ValidUUID @PathVariable String id
     ){
         contract.delete(id);
         return ResponseEntity.noContent().build();

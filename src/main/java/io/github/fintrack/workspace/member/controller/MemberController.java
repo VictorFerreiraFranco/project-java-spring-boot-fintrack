@@ -1,5 +1,6 @@
 package io.github.fintrack.workspace.member.controller;
 
+import io.github.fintrack.common.annotation.validator.uuid.ValidUUID;
 import io.github.fintrack.workspace.member.controller.contract.MemberContract;
 import io.github.fintrack.workspace.member.controller.dto.MemberResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,23 +16,23 @@ public class MemberController {
 
     private MemberContract contract;
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<MemberResponse> findById(
-            @PathVariable String id
+            @ValidUUID @PathVariable String id
     ) {
         return ResponseEntity.ok(contract.findById(id));
     }
 
     @GetMapping("/workspaces/{workspaceId}")
     public ResponseEntity<List<MemberResponse>> findByWorkspaceId(
-            @PathVariable String workspaceId
+            @ValidUUID @PathVariable String workspaceId
     ) {
         return ResponseEntity.ok(contract.findByWorkspaceId(workspaceId));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-            @PathVariable String id
+            @ValidUUID @PathVariable String id
     ) {
         contract.delete(id);
         return ResponseEntity.noContent().build();

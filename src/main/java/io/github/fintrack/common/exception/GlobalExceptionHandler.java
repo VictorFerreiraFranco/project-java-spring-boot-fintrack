@@ -4,11 +4,13 @@ import io.github.fintrack.common.dto.ErrorDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -34,6 +36,34 @@ public class GlobalExceptionHandler {
                 errors.toString(),
                 request.getDescription(false)
         );
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<Object> handleHandlerMethodValidationException(
+            HandlerMethodValidationException ex, WebRequest request) {
+
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getAllErrors().forEach(error -> {
+            String field;
+            String message = error.getDefaultMessage();
+
+            if (error instanceof FieldError fieldError)
+                field = fieldError.getField();
+            else
+                field = "field";
+
+            errors.put(field, message);
+        });
+
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                "Validation Failed",
+                errors.toString(),
+                request.getDescription(false)
+        );
+
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 

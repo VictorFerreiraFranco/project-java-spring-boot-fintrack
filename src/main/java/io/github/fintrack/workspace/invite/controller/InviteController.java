@@ -1,5 +1,6 @@
 package io.github.fintrack.workspace.invite.controller;
 
+import io.github.fintrack.common.annotation.validator.uuid.ValidUUID;
 import io.github.fintrack.common.controller.GenericController;
 import io.github.fintrack.workspace.invite.controller.contract.InviteContract;
 import io.github.fintrack.workspace.invite.controller.dto.InviteRequest;
@@ -18,21 +19,21 @@ public class InviteController implements GenericController {
 
     private final InviteContract contract;
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<InviteResponse> findById(
-            @PathVariable String id
+            @ValidUUID @PathVariable String id
     ) {
         return ResponseEntity.ok(contract.findById(id));
     }
 
-    @GetMapping("pending/workspace/{workspaceId}")
+    @GetMapping("/pending/workspace/{workspaceId}")
     public ResponseEntity<List<InviteResponse>> findAllIsPendingByWorkspace(
-            @PathVariable String workspaceId
+            @ValidUUID @PathVariable String workspaceId
     ) {
         return ResponseEntity.ok(contract.findAllIsPendingByWorkspace(workspaceId));
     }
 
-    @GetMapping("pending/my")
+    @GetMapping("/pending/my")
     public ResponseEntity<List<InviteResponse>> findAllIsPendingByUserLoggedIn() {
         return ResponseEntity.ok(contract.findAllIsPendingByUserLoggedIn());
     }
@@ -47,25 +48,25 @@ public class InviteController implements GenericController {
                 .body(inviteResponse);
     }
 
-    @PutMapping("accept/{id}")
+    @PutMapping("/accept/{id}")
     public ResponseEntity<Void> accept(
-            @PathVariable String id
+            @ValidUUID @PathVariable String id
     ) {
         contract.accept(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("refused/{id}")
+    @PutMapping("/refused/{id}")
     public ResponseEntity<Void> refused(
-            @PathVariable String id
+            @ValidUUID @PathVariable String id
     ) {
         contract.refused(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("cancel/{id}")
+    @PutMapping("/cancel/{id}")
     public ResponseEntity<Void> canceled(
-            @PathVariable String id
+            @ValidUUID @PathVariable String id
     ) {
         contract.canceled(id);
         return ResponseEntity.noContent().build();
