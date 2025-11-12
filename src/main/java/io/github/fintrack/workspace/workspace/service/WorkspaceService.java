@@ -24,6 +24,14 @@ public class WorkspaceService {
     private final AuthService authService;
     private final MemberService memberService;
 
+    public Optional<Workspace> findByIdAndDeletedAtIsNull(UUID id) {
+        return workspaceRepository.findByIdAndDeletion_DeletedAtIsNull(id);
+    }
+
+    public List<Workspace> findAllByMembersUserAndDeletedAtIsNull(User user) {
+        return workspaceRepository.findAllByMembers_UserAndDeletion_DeletedAtIsNull(user);
+    }
+
     public void save(Workspace workspace) {
         workspaceRepository.save(workspace);
     }
@@ -32,14 +40,6 @@ public class WorkspaceService {
         workspaceValidator.validToDelete(workspace);
         workspace.getDeletion().markAsDeleted(authService.getUserLoggedIn());
         this.save(workspace);
-    }
-
-    public Optional<Workspace> findByIdAndDeletedAtIsNull(UUID id) {
-        return workspaceRepository.findByIdAndDeletion_DeletedAtIsNull(id);
-    }
-
-    public List<Workspace> findAllByMembersUserAndDeletedAtIsNull(User user) {
-        return workspaceRepository.findAllByMembers_UserAndDeletion_DeletedAtIsNull(user);
     }
 
     @Transactional

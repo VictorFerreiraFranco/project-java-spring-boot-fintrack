@@ -1,6 +1,7 @@
 package io.github.fintrack.workspace.member.service;
 
 import io.github.fintrack.auth.model.User;
+import io.github.fintrack.auth.service.AuthService;
 import io.github.fintrack.workspace.invite.model.Invite;
 import io.github.fintrack.workspace.member.model.Member;
 import io.github.fintrack.workspace.member.model.Role;
@@ -20,6 +21,15 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberValidator memberValidator;
+    private final AuthService authService;
+
+    public Optional<Member> findByIdAndDeletedAtIsNull(UUID id) {
+        return memberRepository.findByIdAndDeletion_DeletedAtIsNull(id);
+    }
+
+    public List<Member> findAllByWorkspaceAndDeletedAtIsNull(Workspace workspace) {
+        return memberRepository.findAllByWorkspaceAndDeletion_DeletedAtIsNull(workspace);
+    }
 
     public void save(Member member){
         memberValidator.validToSave(member);
@@ -28,15 +38,8 @@ public class MemberService {
 
     public void delete(Member member){
         memberValidator.validToDelete(member);
-        memberRepository.delete(member);
-    }
-
-    public Optional<Member> findByIdAndDeletedAtIsNull(UUID id) {
-        return memberRepository.findByIdAndDeletion_DeletedAtIsNull(id);
-    }
-
-    public List<Member> findAllByWorkspaceAndDeletedAtIsNull(Workspace workspace) {
-        return memberRepository.findAllByWorkspaceAndDeletion_DeletedAtIsNull(workspace);
+        member.getDeletion().markAsDeleted(authService.getUserLoggedIn());
+        memberRepository.save(member);
     }
 
     public void createOwner(User user, Workspace workspace) {
