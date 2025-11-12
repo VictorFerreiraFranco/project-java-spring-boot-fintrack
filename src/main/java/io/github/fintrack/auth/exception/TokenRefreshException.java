@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.Serial;
 
-@ResponseStatus(HttpStatus.FORBIDDEN)
+@ResponseStatus(value = HttpStatus.FORBIDDEN)
 public class TokenRefreshException extends AuthException {
 
     @Serial

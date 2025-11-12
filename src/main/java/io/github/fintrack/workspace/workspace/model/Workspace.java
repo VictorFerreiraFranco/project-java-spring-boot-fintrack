@@ -32,4 +32,13 @@ public class Workspace extends CreatedAndDeleteEntity {
         this.type = type;
         this.getCreation().setCreatedBy(createdBy);
     }
+
+    public Member getOwner() {
+        return members.stream()
+                .filter(Member::isOwner)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public boolean isOwner(Member member) {}
 }

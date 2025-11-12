@@ -67,3 +67,20 @@ CREATE TABLE workspace_members
     FOREIGN KEY (created_by) REFERENCES users (id),
     FOREIGN KEY (deleted_by) REFERENCES users (id)
 );
+
+drop table if exists financial_categories cascade;
+CREATE TABLE financial_categories
+(
+    id           uuid         not null primary key,
+    workspace_id uuid         not null,
+    description  varchar(255) not null,
+    type         varchar(255) not null,
+    color        varchar(255) not null,
+    created_by   uuid         not null,
+    created_at   timestamp    not null,
+    deleted_by   uuid         null,
+    deleted_at   timestamp    null,
+    FOREIGN KEY (workspace_id) REFERENCES workspaces (id),
+    FOREIGN KEY (created_by) REFERENCES users (id),
+    FOREIGN KEY (deleted_by) REFERENCES users (id)
+);
