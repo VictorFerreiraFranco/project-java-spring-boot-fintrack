@@ -43,7 +43,7 @@ public class InviteController implements GenericController {
     ) {
         InviteResponse inviteResponse = contract.register(request);
         return ResponseEntity
-                .created(this.buildHeaderLocation(inviteResponse.getId()))
+                .created(this.buildHeaderLocation(inviteResponse.id()))
                 .body(inviteResponse);
     }
 

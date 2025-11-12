@@ -1,17 +1,11 @@
 package io.github.fintrack.auth.controller;
 
-import io.github.fintrack.auth.controller.dto.AuthenticationRequest;
-import io.github.fintrack.auth.controller.dto.AuthenticationResponse;
-import io.github.fintrack.auth.controller.dto.RegisterRequest;
-import io.github.fintrack.auth.controller.dto.TokenRefreshRequest;
+import io.github.fintrack.auth.controller.dto.*;
 import io.github.fintrack.auth.controller.contract.AuthenticationContract;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -39,5 +33,10 @@ public class AuthenticationController {
             @Valid @RequestBody TokenRefreshRequest request
     ) {
         return ResponseEntity.ok(contract.refreshToken(request));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getCurrentUser() {
+        return ResponseEntity.ok(contract.getCurrentUser());
     }
 }

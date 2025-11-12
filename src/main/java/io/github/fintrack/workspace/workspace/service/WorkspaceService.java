@@ -24,8 +24,8 @@ public class WorkspaceService {
     private final AuthService authService;
     private final MemberService memberService;
 
-    public Workspace save(Workspace workspace) {
-        return workspaceRepository.save(workspace);
+    public void save(Workspace workspace) {
+        workspaceRepository.save(workspace);
     }
 
     public void delete(Workspace workspace) {

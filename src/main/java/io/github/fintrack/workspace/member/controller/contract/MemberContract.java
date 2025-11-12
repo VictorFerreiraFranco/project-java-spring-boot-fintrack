@@ -3,7 +3,6 @@ package io.github.fintrack.workspace.member.controller.contract;
 import io.github.fintrack.workspace.member.controller.dto.MemberResponse;
 import io.github.fintrack.workspace.member.controller.mapper.MemberResponseMapper;
 import io.github.fintrack.workspace.member.exception.MemberNotFoundException;
-import io.github.fintrack.workspace.member.model.Member;
 import io.github.fintrack.workspace.member.service.MemberService;
 import io.github.fintrack.workspace.workspace.exception.WorkspaceNotFoundException;
 import io.github.fintrack.workspace.workspace.service.WorkspaceService;

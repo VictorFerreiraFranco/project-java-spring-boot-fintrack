@@ -2,8 +2,9 @@ package io.github.fintrack.workspace.workspace.controller;
 
 import io.github.fintrack.common.controller.GenericController;
 import io.github.fintrack.workspace.workspace.controller.contract.WorkspaceContract;
+import io.github.fintrack.workspace.workspace.controller.dto.WorkspaceDetailsResponse;
 import io.github.fintrack.workspace.workspace.controller.dto.WorkspaceRequest;
-import io.github.fintrack.workspace.workspace.controller.dto.WorkspaceResponse;
+import io.github.fintrack.workspace.workspace.controller.dto.WorkspaceSingleResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,30 +20,30 @@ public class WorkspaceController implements GenericController {
     private final WorkspaceContract contract;
 
     @GetMapping("{id}")
-    public ResponseEntity<WorkspaceResponse> findById(
+    public ResponseEntity<WorkspaceDetailsResponse> findById(
             @PathVariable String id
     ) {
         return ResponseEntity.ok(contract.findById(id));
     }
 
     @GetMapping("my")
-    public ResponseEntity<List<WorkspaceResponse>> findByUserLoggedId() {
+    public ResponseEntity<List<WorkspaceDetailsResponse>> findByUserLoggedId() {
         return ResponseEntity.ok(contract.findByUserLoggedId());
     }
 
     @PostMapping
-    public ResponseEntity<WorkspaceResponse> create(
+    public ResponseEntity<WorkspaceSingleResponse> create(
             @Valid @RequestBody WorkspaceRequest request
     ){
-        WorkspaceResponse workspaceResponse = contract.create(request);
+        WorkspaceSingleResponse workspaceResponse = contract.create(request);
 
         return ResponseEntity
-                .created(buildHeaderLocation(workspaceResponse.getId()))
+                .created(buildHeaderLocation(workspaceResponse.id()))
                 .body(workspaceResponse);
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<WorkspaceResponse> update(
+    public ResponseEntity<WorkspaceSingleResponse> update(
             @PathVariable String id,
             @Valid @RequestBody WorkspaceRequest request
     ){

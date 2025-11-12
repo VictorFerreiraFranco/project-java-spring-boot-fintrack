@@ -1,11 +1,10 @@
 package io.github.fintrack.auth.controller.contract;
 
+import io.github.fintrack.auth.controller.dto.*;
+import io.github.fintrack.auth.controller.mapper.UserResponseMapper;
 import io.github.fintrack.auth.exception.UserNotFoundException;
+import io.github.fintrack.auth.service.AuthService;
 import io.github.fintrack.common.config.jwt.JwtService;
-import io.github.fintrack.auth.controller.dto.AuthenticationRequest;
-import io.github.fintrack.auth.controller.dto.AuthenticationResponse;
-import io.github.fintrack.auth.controller.dto.RegisterRequest;
-import io.github.fintrack.auth.controller.dto.TokenRefreshRequest;
 import io.github.fintrack.auth.controller.mapper.RegisterRequestMapper;
 import io.github.fintrack.auth.exception.TokenRefreshException;
 import io.github.fintrack.auth.model.RefreshToken;
@@ -15,7 +14,6 @@ import io.github.fintrack.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,9 +22,11 @@ public class AuthenticationContract {
 
     private final UserService userService;
     private final RefreshTokenService refreshTokenService;
-    private final RegisterRequestMapper registerRequestMapper;
-    private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final AuthService authService;
+    private final AuthenticationManager authenticationManager;
+    private final RegisterRequestMapper registerRequestMapper;
+    private final UserResponseMapper  userResponseMapper;
 
     public AuthenticationResponse register(RegisterRequest request) {
         return buildAuthenticationResponseWithNewToken(
@@ -56,23 +56,24 @@ public class AuthenticationContract {
         return refreshTokenService.findByToken(requestRefreshToken)
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
-                .map(user -> {
-                    String accessToken = jwtService.generateToken(user);
-                    return AuthenticationResponse.builder()
-                            .accessToken(accessToken)
-                            .refreshToken(requestRefreshToken)
-                            .build();
-                })
-                .orElseThrow(() -> new TokenRefreshException(requestRefreshToken, "Refresh token is not in database!"));
+                .map(user -> new AuthenticationResponse(
+                        jwtService.generateToken(user),
+                        requestRefreshToken
+                ))
+                .orElseThrow(() -> new TokenRefreshException(
+                        requestRefreshToken,
+                        "Refresh token is not in database!"
+                ));
     }
 
     private AuthenticationResponse buildAuthenticationResponseWithNewToken(User user) {
-        String jwtToken = jwtService.generateToken(user);
-        String refreshToken = refreshTokenService.createByUser(user).getToken();
+        return new AuthenticationResponse(
+                jwtService.generateToken(user),
+                refreshTokenService.createByUser(user).getToken()
+        );
+    }
 
-        return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .build();
+    public UserResponse getCurrentUser() {
+        return userResponseMapper.toDto(authService.getUserLoggedIn());
     }
 }

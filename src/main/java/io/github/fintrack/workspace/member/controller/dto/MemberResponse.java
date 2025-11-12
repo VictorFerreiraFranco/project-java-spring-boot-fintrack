@@ -1,21 +1,14 @@
 package io.github.fintrack.workspace.member.controller.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import io.github.fintrack.auth.controller.dto.UserResponse;
 import io.github.fintrack.workspace.member.model.Role;
-import lombok.Builder;
-import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
-@Builder
-public class MemberResponse {
-    private UUID id;
-    private Role role;
-
-    @JsonProperty("user_id")
-    private UUID userId;
-
-    private String name;
-    private String email;
-}
+public record MemberResponse (
+        UUID id,
+        Role role,
+        LocalDateTime created,
+        UserResponse user
+) {}
