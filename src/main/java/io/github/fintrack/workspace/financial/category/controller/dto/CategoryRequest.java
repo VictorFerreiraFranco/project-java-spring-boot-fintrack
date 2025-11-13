@@ -5,15 +5,15 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public class CategoryRequest {
-    @NotBlank
-    @Size(min = 3, max = 255)
-    public String description;
+public record CategoryRequest (
+        @NotBlank
+        @Size(min = 3, max = 255)
+        String description,
 
-    @NotBlank
-    @Size(min = 1, max = 255)
-    public String color;
+        @NotBlank
+        @Size(min = 1, max = 255)
+        String color,
 
-    @NotNull
-    public Type type;
-}
+        @NotNull
+        Type type
+) {}

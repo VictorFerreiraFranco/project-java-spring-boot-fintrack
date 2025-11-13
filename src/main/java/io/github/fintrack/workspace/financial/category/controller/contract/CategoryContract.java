@@ -29,7 +29,7 @@ public class CategoryContract {
 
     @Transactional(readOnly = true)
     public CategoryResponse getById(String id) {
-        return categoryMapper.toDto(
+        return categoryMapper.toResponse(
             this.findById(id)
         );
     }
@@ -38,7 +38,7 @@ public class CategoryContract {
     public List<CategoryResponse> searchAllByWorkspace(String workspaceId, CategoryFilter filter) {
         return categoryService.searchAllByWorkspace(this.findWorkspaceById(workspaceId), filter)
                 .stream()
-                .map(categoryMapper::toDto)
+                .map(categoryMapper::toResponse)
                 .toList();
     }
 
@@ -50,10 +50,10 @@ public class CategoryContract {
 
     @Transactional()
     public CategoryResponse register(String workspaceId, CategoryRequest request) {
-        Category entity = categoryMapper.toEntity(request);
-        entity.setWorkspace(this.findWorkspaceById(workspaceId));
-        return categoryMapper.toDto(
-                categoryService.save(entity)
+        Category category = categoryMapper.toEntity(request);
+        category.setWorkspace(this.findWorkspaceById(workspaceId));
+        return categoryMapper.toResponse(
+                categoryService.save(category)
         );
     }
 
@@ -61,7 +61,7 @@ public class CategoryContract {
     public CategoryResponse update(String id, CategoryRequest request) {
         Category category = this.findById(id);
         categoryMapper.updateEntity(category, request);
-        return categoryMapper.toDto(
+        return categoryMapper.toResponse(
                 categoryService.save(category)
         );
     }

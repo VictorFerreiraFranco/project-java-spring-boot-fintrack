@@ -1,5 +1,6 @@
 package io.github.fintrack.workspace.financial.category.validator;
 
+import io.github.fintrack.common.exception.DuplicateRecordException;
 import io.github.fintrack.workspace.financial.category.exception.CategoryNotFoundException;
 import io.github.fintrack.workspace.financial.category.model.Category;
 import io.github.fintrack.workspace.financial.category.repository.CategoryRepository;
@@ -18,7 +19,7 @@ public class CategoryValidator {
 
     public void validToSave(Category category) {
         if (categoryExists(category))
-            throw new CategoryNotFoundException();
+            throw new DuplicateRecordException("Category already exists");
 
         workspaceValidator.validUserLoggedInIsMemberByWorkspace(category.getWorkspace());
     }
@@ -28,7 +29,7 @@ public class CategoryValidator {
     }
 
     public boolean categoryExists(Category category) {
-        Optional<Category> optionalCategory = categoryRepository
+        Optional<Category> categoryFund = categoryRepository
                 .findByWorkspaceAndDescriptionIgnoreCaseAndTypeAndDeletion_DeletedAtIsNull(
                         category.getWorkspace(),
                         category.getDescription(),
@@ -36,8 +37,8 @@ public class CategoryValidator {
                 );
 
         if (category.getId() == null)
-            return optionalCategory.isPresent();
+            return categoryFund.isPresent();
 
-        return optionalCategory.isPresent() && !category.getId().equals(optionalCategory.get().getId());
+        return categoryFund.isPresent() && !category.getId().equals(categoryFund.get().getId());
     }
 }

@@ -1,12 +1,12 @@
-package io.github.fintrack.workspace.member.exception;
+package io.github.fintrack.workspace.payment.method.exception;
 
 import io.github.fintrack.common.exception.FinTrackMappedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-public abstract class MemberException extends FinTrackMappedException {
-    public MemberException(String message) {
+public class PaymentMethodException extends FinTrackMappedException {
+    public PaymentMethodException(String message) {
         super(message);
     }
 }

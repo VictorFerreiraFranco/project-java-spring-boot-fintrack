@@ -15,13 +15,13 @@ public class CategorySpecification {
             return spec;
 
         if (filter.description() != null && !filter.description().isEmpty())
-            spec = spec.and(CategorySpecification.descriptionLike(filter.description()));
+            spec = spec.and(descriptionLike(filter.description()));
 
         if (filter.color() != null && !filter.color().isEmpty())
-            spec = spec.and(CategorySpecification.colorEqual(filter.color()));
+            spec = spec.and(colorEqual(filter.color()));
 
         if (filter.type() != null && !filter.type().isEmpty())
-            spec = spec.and(CategorySpecification.typeEqual(Type.valueOf(filter.type())));
+            spec = spec.and(typeEqual(Type.valueOf(filter.type())));
 
         return spec;
     }

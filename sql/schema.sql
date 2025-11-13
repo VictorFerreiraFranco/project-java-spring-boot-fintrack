@@ -84,3 +84,20 @@ CREATE TABLE financial_categories
     FOREIGN KEY (created_by) REFERENCES users (id),
     FOREIGN KEY (deleted_by) REFERENCES users (id)
 );
+
+
+drop table if exists payment_methods cascade;
+CREATE TABLE payment_methods
+(
+    id           uuid         not null primary key,
+    workspace_id uuid         not null,
+    description  varchar(255) not null,
+    type         varchar(255) not null,
+    created_by   uuid         not null,
+    created_at   timestamp    not null,
+    deleted_by   uuid         null,
+    deleted_at   timestamp    null,
+    FOREIGN KEY (workspace_id) REFERENCES workspaces (id),
+    FOREIGN KEY (created_by) REFERENCES users (id),
+    FOREIGN KEY (deleted_by) REFERENCES users (id)
+);
