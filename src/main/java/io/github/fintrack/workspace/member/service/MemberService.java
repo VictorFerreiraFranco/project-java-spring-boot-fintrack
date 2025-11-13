@@ -10,6 +10,7 @@ import io.github.fintrack.workspace.member.validator.MemberValidator;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,11 +32,13 @@ public class MemberService {
         return memberRepository.findAllByWorkspaceAndDeletion_DeletedAtIsNull(workspace);
     }
 
+    @Transactional
     public void save(Member member){
         memberValidator.validToSave(member);
         memberRepository.save(member);
     }
 
+    @Transactional
     public void delete(Member member){
         memberValidator.validToDelete(member);
         member.getDeletion().markAsDeleted(authService.getUserLoggedIn());

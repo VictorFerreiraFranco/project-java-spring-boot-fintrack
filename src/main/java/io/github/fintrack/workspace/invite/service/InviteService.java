@@ -51,12 +51,14 @@ public class InviteService {
         memberService.createByInvite(invite);
     }
 
+    @Transactional
     public void refuseInvite(Invite invite) {
         inviteValidator.validToRefuse(invite);
         invite.setStatus(Status.REFUSED);
         inviteRepository.save(invite);
     }
 
+    @Transactional
     public void canceledInvite(Invite invite) {
         inviteValidator.validToCanceled(invite);
         invite.setStatus(Status.CANCELED);

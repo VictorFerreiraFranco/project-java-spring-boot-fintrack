@@ -36,6 +36,7 @@ public class WorkspaceService {
         return workspaceRepository.save(workspace);
     }
 
+    @Transactional
     public void delete(Workspace workspace) {
         workspaceValidator.validToDelete(workspace);
         workspace.getDeletion().markAsDeleted(authService.getUserLoggedIn());

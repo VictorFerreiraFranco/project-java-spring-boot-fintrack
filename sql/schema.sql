@@ -101,3 +101,19 @@ CREATE TABLE payment_methods
     FOREIGN KEY (created_by) REFERENCES users (id),
     FOREIGN KEY (deleted_by) REFERENCES users (id)
 );
+
+drop table if exists financial_category_goals cascade;
+CREATE TABLE financial_category_goals
+(
+    id                      uuid           not null primary key,
+    financial_category_id   uuid           not null,
+    description             varchar(255)   not null,
+    amount                  numeric(15, 2) not null,
+    created_by              uuid           not null,
+    created_at              timestamp      not null,
+    deleted_by              uuid           null,
+    deleted_at              timestamp      null,
+    FOREIGN KEY (financial_category_id) REFERENCES financial_categories (id),
+    FOREIGN KEY (created_by) REFERENCES users (id),
+    FOREIGN KEY (deleted_by) REFERENCES users (id)
+);

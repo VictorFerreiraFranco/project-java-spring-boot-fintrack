@@ -9,6 +9,7 @@ import io.github.fintrack.workspace.financial.category.validator.CategoryValidat
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,11 +37,13 @@ public class CategoryService {
         );
     }
 
+    @Transactional
     public Category save(Category category) {
         categoryValidator.validToSave(category);
         return categoryRepository.save(category);
     }
 
+    @Transactional
     public void delete(Category category) {
         categoryValidator.validToDelete(category);
         category.getDeletion().markAsDeleted(authService.getUserLoggedIn());

@@ -29,7 +29,7 @@ public class CategoryController implements GenericController {
     public ResponseEntity<List<CategoryResponse>> searchAllByWorkspace(
             @ValidUUID @PathVariable("workspaceId") String workspaceId,
             @RequestBody CategoryFilter filter
-            ) {
+    ) {
         return ResponseEntity.ok(contract.searchAllByWorkspace(workspaceId, filter));
     }
 

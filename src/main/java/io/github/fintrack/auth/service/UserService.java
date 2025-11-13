@@ -27,6 +27,7 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    @Transactional
     public void save(User user) {
         userValidator.validToSave(user);
         userRepository.save(user);

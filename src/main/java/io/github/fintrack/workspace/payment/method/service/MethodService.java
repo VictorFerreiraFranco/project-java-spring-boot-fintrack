@@ -9,6 +9,7 @@ import io.github.fintrack.workspace.payment.method.validator.MethodValidator;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,11 +37,13 @@ public class MethodService {
         );
     }
 
+    @Transactional
     public Method save(Method method) {
         methodValidator.validToSave(method);
         return methodRepository.save(method);
     }
 
+    @Transactional
     public void delete(Method method) {
         methodValidator.validToDelete(method);
         method.getDeletion().markAsDeleted(authService.getUserLoggedIn());
