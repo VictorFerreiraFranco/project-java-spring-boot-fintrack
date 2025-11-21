@@ -5,10 +5,8 @@ import io.github.fintrack.transaction.entry.controller.dto.EntryTransactionByYea
 import io.github.fintrack.transaction.entry.controller.mapper.EntryMapper;
 import io.github.fintrack.transaction.installment.model.Installment;
 import io.github.fintrack.transaction.transaction.service.TransactionService;
-import io.github.fintrack.workspace.workspace.exception.WorkspaceNotFoundException;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import io.github.fintrack.workspace.workspace.service.WorkspaceService;
-import io.github.fintrack.workspace.workspace.service.validator.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,12 +22,11 @@ public class EntryContract {
 
     private final TransactionService transactionService;
     private final WorkspaceService workspaceService;
-    private final WorkspaceValidator workspaceValidator;
     private final EntryMapper entryMapper;
 
     @Transactional()
     public List<EntryTransactionByMonthYearResponse> getByWorkspaceAndMonthAndYear(String workspaceId, Integer month, Integer year) {
-        Workspace workspace = this.findWorkspaceById(workspaceId);
+        Workspace workspace = workspaceService.findByIdAndValidateExistenceAndMembership(UUID.fromString(workspaceId));
 
         transactionService.normalizeIrregularTransactionsByWorkspace(workspace);
 
@@ -54,7 +51,7 @@ public class EntryContract {
 
     @Transactional()
     public List<EntryTransactionByYearResponse> getByWorkspaceAndYear(String workspaceId, Integer year) {
-        Workspace workspace = this.findWorkspaceById(workspaceId);
+        Workspace workspace =  workspaceService.findByIdAndValidateExistenceAndMembership(UUID.fromString(workspaceId));
 
         transactionService.normalizeIrregularTransactionsByWorkspace(workspace);
 
@@ -73,15 +70,4 @@ public class EntryContract {
                 })
                 .toList();
     }
-
-    @Transactional(readOnly = true)
-    protected Workspace findWorkspaceById(String workspaceId) {
-        Workspace workspace = workspaceService.findByIdAndDeletedAtIsNull(UUID.fromString(workspaceId))
-                .orElseThrow(WorkspaceNotFoundException::new);
-
-        workspaceValidator.validUserLoggedInIsMemberByWorkspace(workspace);
-
-        return workspace;
-    }
-
 }

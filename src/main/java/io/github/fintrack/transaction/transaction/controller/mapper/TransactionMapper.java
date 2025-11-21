@@ -58,5 +58,4 @@ public interface TransactionMapper {
     @Mapping(target = "creation", ignore = true)
     @Mapping(target = "deletion", ignore = true)
     void updateEntityByRequestRecurrence(@MappingTarget Transaction entity, TransactionRecurrenceRequest request);
-
 }

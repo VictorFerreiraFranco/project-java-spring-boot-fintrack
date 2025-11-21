@@ -27,23 +27,6 @@ public class TransactionController implements GenericController {
         return ResponseEntity.ok(contract.getById(id));
     }
 
-//    @GetMapping("/workspace/{workspaceId}/month/{month}/year/{year}")
-//    public ResponseEntity<List<TransactionResponse>> getByWorkspaceAndMonthAndYear(
-//            @PathVariable String workspaceId,
-//            @PathVariable Integer month,
-//            @PathVariable Integer year
-//    ) {
-//        return ResponseEntity.ok(contract.getByWorkspaceAndMonthAndYear(workspaceId, month, year));
-//    }
-//
-//    @GetMapping("/workspace/{workspaceId}/year/{year}")
-//    public ResponseEntity<List<TransactionResponse>> getByWorkspaceAndYear(
-//            @PathVariable String workspaceId,
-//            @PathVariable Integer year
-//    ) {
-//        return ResponseEntity.ok(contract.getByWorkspaceAndYear(workspaceId, year));
-//    }
-
     @GetMapping("/types")
     public ResponseEntity<List<TransactionTypeResponse>> getType()
     {

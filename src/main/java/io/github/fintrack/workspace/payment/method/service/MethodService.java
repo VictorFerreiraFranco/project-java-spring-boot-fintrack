@@ -40,10 +40,15 @@ public class MethodService {
         );
     }
 
+    public Method findByIdAndValidateExistence(UUID id) {
+        return this.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(PaymentMethodNotFoundException::new);
+    }
+
+
     @Transactional
     public Method findByIdAndValidateExistenceAndMembershipByWorkspace(UUID id) {
-        Method method = this.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(PaymentMethodNotFoundException::new);
+        Method method = this.findByIdAndValidateExistence(id);
 
         workspaceValidator.validUserLoggedInIsMemberByWorkspace(method.getWorkspace());
 

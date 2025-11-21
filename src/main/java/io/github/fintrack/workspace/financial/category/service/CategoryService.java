@@ -41,9 +41,14 @@ public class CategoryService {
     }
 
     @Transactional
-    public Category findByIdAndValidateExistenceAndMembership(UUID id) {
-        Category category = this.findByIdAndDeletedAtIsNull(id)
+    public Category findByIdAndValidateExistence(UUID id) {
+        return this.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(CategoryNotFoundException::new);
+    }
+
+    @Transactional
+    public Category findByIdAndValidateExistenceAndMembership(UUID id) {
+        Category category = this.findByIdAndValidateExistence(id);
 
         workspaceValidator.userLoggedInIsNotMemberByWorkspace(category.getWorkspace());
 

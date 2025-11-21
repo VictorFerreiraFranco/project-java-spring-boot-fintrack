@@ -8,25 +8,27 @@ import io.github.fintrack.transaction.transaction.service.TransactionService;
 import io.github.fintrack.workspace.financial.category.service.CategoryService;
 import io.github.fintrack.workspace.payment.method.service.MethodService;
 import io.github.fintrack.workspace.workspace.service.WorkspaceService;
-import io.github.fintrack.workspace.workspace.service.validator.WorkspaceValidator;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Component
 public class TransactionRecurrenceContract extends TransactionContractBase {
 
     private final TransactionMapper transactionMapper;
+    private final TransactionService transactionService;
 
     public TransactionRecurrenceContract(
             WorkspaceService workspaceService,
-            WorkspaceValidator workspaceValidator,
             TransactionService transactionService,
             CategoryService categoryService,
             MethodService methodService,
             TransactionMapper transactionMapper
     ) {
-        super(workspaceService, workspaceValidator, transactionService, categoryService, methodService, transactionMapper);
+        super(workspaceService, transactionService, categoryService, methodService, transactionMapper);
         this.transactionMapper = transactionMapper;
+        this.transactionService = transactionService;
     }
 
     @Transactional
@@ -41,7 +43,7 @@ public class TransactionRecurrenceContract extends TransactionContractBase {
 
     @Transactional
     public TransactionResponse update(String id, TransactionRecurrenceRequest request) {
-        Transaction transaction = this.findById(id);
+        Transaction transaction = transactionService.findByIdAndValidateExistenceAndMembership(UUID.fromString(id));
         transactionMapper.updateEntityByRequestRecurrence(transaction, request);
 
         return super.update(

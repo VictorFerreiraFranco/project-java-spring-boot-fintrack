@@ -2,11 +2,13 @@ package io.github.fintrack.transaction.transaction.service;
 
 import io.github.fintrack.transaction.installment.model.Installment;
 import io.github.fintrack.transaction.installment.service.InstallmentService;
+import io.github.fintrack.transaction.transaction.exception.TransactionNotFoundException;
 import io.github.fintrack.transaction.transaction.model.Transaction;
 import io.github.fintrack.transaction.transaction.repository.TransactionRepository;
 import io.github.fintrack.transaction.transaction.repository.specification.TransactionSpecification;
-import io.github.fintrack.transaction.transaction.validator.TransactionValidator;
+import io.github.fintrack.transaction.transaction.service.validator.TransactionValidator;
 import io.github.fintrack.workspace.workspace.model.Workspace;
+import io.github.fintrack.workspace.workspace.service.validator.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final TransactionValidator transactionValidator;
     private final InstallmentService installmentService;
+    private final WorkspaceValidator workspaceValidator;
 
     public Optional<Transaction> findByIdAndDeleteAtIsNull(UUID id) {
         return transactionRepository.findByIdAndDeletionDeletedAtIsNull(id);
@@ -43,6 +46,16 @@ public class TransactionService {
                         .and(TransactionSpecification.workspaceEqual(workspace))
                         .and(TransactionSpecification.withInstallmentsInYear(date))
         );
+    }
+
+    @Transactional
+    public Transaction findByIdAndValidateExistenceAndMembership(UUID id) {
+        Transaction method = this.findByIdAndDeleteAtIsNull(id)
+                .orElseThrow(TransactionNotFoundException::new);
+
+        workspaceValidator.validUserLoggedInIsMemberByWorkspace(method.getWorkspace());
+
+        return method;
     }
 
     @Transactional

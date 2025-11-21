@@ -1,4 +1,4 @@
-package io.github.fintrack.transaction.transaction.validator;
+package io.github.fintrack.transaction.transaction.service.validator;
 
 import io.github.fintrack.transaction.transaction.exception.InvalidArgumentsTransactionException;
 import io.github.fintrack.transaction.transaction.model.Transaction;
