@@ -28,14 +28,14 @@ public class MethodContract {
     @Transactional(readOnly = true)
     public MethodResponse getById(String id) {
         return methodMapper.toResponse(
-                methodService.findByIdAndValidUserLoggedInIsMember(UUID.fromString(id))
+                methodService.findByIdAndValidateExistenceAndMembershipByWorkspace(UUID.fromString(id))
         );
     }
 
     @Transactional(readOnly = true)
     public List<MethodResponse> searchAllByWorkspace(String workspaceId, MethodFilter filter) {
         return methodService.searchByWorkspace(
-                        workspaceService.findByIdAndValidUserLoggedInIsMember(
+                        workspaceService.findByIdAndValidateExistenceAndMembership(
                                 UUID.fromString(workspaceId)
                         ),
                         filter
@@ -54,7 +54,7 @@ public class MethodContract {
     @Transactional()
     public MethodResponse register(String workspaceId, MethodRequest request) {
         Method method = methodMapper.toEntity(request);
-        method.setWorkspace(workspaceService.findByIdAndValidUserLoggedInIsMember(UUID.fromString(workspaceId)));
+        method.setWorkspace(workspaceService.findByIdAndValidateExistenceAndMembership(UUID.fromString(workspaceId)));
         return methodMapper.toResponse(
                 methodService.save(method)
         );
@@ -62,7 +62,7 @@ public class MethodContract {
 
     @Transactional
     public MethodResponse update(String id, MethodRequest request) {
-        Method method = methodService.findByIdAndValidUserLoggedInIsMember(UUID.fromString(id));
+        Method method = methodService.findByIdAndValidateExistenceAndMembershipByWorkspace(UUID.fromString(id));
         methodMapper.updateEntity(method, request);
         return methodMapper.toResponse(
                 methodService.save(method)
@@ -72,7 +72,7 @@ public class MethodContract {
     @Transactional
     public void delete(String id) {
         methodService.delete(
-                this.methodService.findByIdAndValidUserLoggedInIsMember(UUID.fromString(id))
+                this.methodService.findByIdAndValidateExistenceAndMembershipByWorkspace(UUID.fromString(id))
         );
     }
 

@@ -25,7 +25,7 @@ public class WorkspaceContract {
     @Transactional(readOnly = true)
     public WorkspaceDetailsResponse getById(String id) {
         return workspaceMapper.toDetailsResponse(
-                workspaceService.findByIdAndValidUserLoggedInIsMember(UUID.fromString(id))
+                workspaceService.findByIdAndValidateExistenceAndMembership(UUID.fromString(id))
         );
     }
 
@@ -49,7 +49,7 @@ public class WorkspaceContract {
     public WorkspaceSingleResponse update(String id, WorkspaceRequest request) {
         Workspace workspaceRequest = workspaceMapper.toEntity(request);
 
-        Workspace workspace =  workspaceService.findByIdAndValidUserLoggedInIsMember(UUID.fromString(id));
+        Workspace workspace =  workspaceService.findByIdAndValidateExistenceAndMembership(UUID.fromString(id));
         workspace.setName(workspaceRequest.getName());
 
         return workspaceMapper.toSingleResponse(
@@ -59,7 +59,7 @@ public class WorkspaceContract {
 
     public void delete(String id) {
         workspaceService.delete(
-                workspaceService.findByIdAndValidUserLoggedInIsMember(UUID.fromString(id))
+                workspaceService.findByIdAndValidateExistenceAndMembership(UUID.fromString(id))
         );
     }
 }

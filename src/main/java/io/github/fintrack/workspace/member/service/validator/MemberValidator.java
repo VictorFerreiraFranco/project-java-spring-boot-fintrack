@@ -7,6 +7,7 @@ import io.github.fintrack.workspace.member.exception.CannotPermissionDelete;
 import io.github.fintrack.workspace.member.model.Member;
 import io.github.fintrack.workspace.member.model.Role;
 import io.github.fintrack.workspace.member.repository.MemberRepository;
+import io.github.fintrack.workspace.member.repository.specification.MemberSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -43,7 +44,11 @@ public class MemberValidator {
     }
 
     public boolean userLoggedInIsOwner(Member member) {
-        List<Member> ownerList = memberRepository.findAllByWorkspaceAndRole(member.getWorkspace(), Role.OWNER);
+        List<Member> ownerList = memberRepository.findAll(
+                MemberSpecification.workspaceEqual(member.getWorkspace())
+                        .and(MemberSpecification.roleEqual(Role.OWNER))
+                        .and(MemberSpecification.deletedAtIsNull())
+        );
 
         if (ownerList.isEmpty())
             return false;

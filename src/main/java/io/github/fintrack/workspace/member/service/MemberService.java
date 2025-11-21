@@ -3,9 +3,11 @@ package io.github.fintrack.workspace.member.service;
 import io.github.fintrack.auth.model.User;
 import io.github.fintrack.auth.service.AuthService;
 import io.github.fintrack.workspace.invite.model.Invite;
+import io.github.fintrack.workspace.member.exception.MemberNotFoundException;
 import io.github.fintrack.workspace.member.model.Member;
 import io.github.fintrack.workspace.member.model.Role;
 import io.github.fintrack.workspace.member.repository.MemberRepository;
+import io.github.fintrack.workspace.member.repository.specification.MemberSpecification;
 import io.github.fintrack.workspace.member.service.validator.MemberValidator;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +31,15 @@ public class MemberService {
     }
 
     public List<Member> findAllByWorkspaceAndDeletedAtIsNull(Workspace workspace) {
-        return memberRepository.findAllByWorkspaceAndDeletion_DeletedAtIsNull(workspace);
+        return memberRepository.findAll(
+                MemberSpecification.workspaceEqual(workspace)
+                        .and(MemberSpecification.deletedAtIsNull())
+        );
+    }
+
+    public Member findByIdAndValidateExistence(UUID id) {
+        return this.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(MemberNotFoundException::new);
     }
 
     @Transactional
@@ -45,6 +55,7 @@ public class MemberService {
         memberRepository.save(member);
     }
 
+    @Transactional
     public void createOwner(User user, Workspace workspace) {
         Member member = Member.builder()
                 .user(user)
@@ -55,6 +66,7 @@ public class MemberService {
         this.save(member);
     }
 
+    @Transactional
     public void createByInvite(Invite invite) {
         Member member = Member.builder()
                 .user(invite.getTo())

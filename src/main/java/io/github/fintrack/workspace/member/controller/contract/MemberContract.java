@@ -5,10 +5,7 @@ import io.github.fintrack.workspace.member.controller.mapper.MemberResponseMappe
 import io.github.fintrack.workspace.member.exception.MemberNotFoundException;
 import io.github.fintrack.workspace.member.model.Member;
 import io.github.fintrack.workspace.member.service.MemberService;
-import io.github.fintrack.workspace.workspace.exception.WorkspaceNotFoundException;
-import io.github.fintrack.workspace.workspace.model.Workspace;
 import io.github.fintrack.workspace.workspace.service.WorkspaceService;
-import io.github.fintrack.workspace.workspace.service.validator.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,18 +20,19 @@ public class MemberContract {
     private final MemberService memberService;
     private final WorkspaceService workspaceService;
     private final MemberResponseMapper memberResponseMapper;
-    private final WorkspaceValidator workspaceValidator;
 
     @Transactional(readOnly = true)
     public MemberResponse getById(String id) {
         return memberResponseMapper.toDto(
-                this.findById(id)
+                memberService.findByIdAndValidateExistence(UUID.fromString(id))
         );
     }
 
     @Transactional(readOnly = true)
     public List<MemberResponse> getByWorkspaceId(String workspaceId) {
-        return memberService.findAllByWorkspaceAndDeletedAtIsNull(this.findWorkspaceById(workspaceId))
+        return memberService.findAllByWorkspaceAndDeletedAtIsNull(
+                        workspaceService.findByIdAndValidateExistenceAndMembership(UUID.fromString(workspaceId))
+                )
                 .stream()
                 .map(memberResponseMapper::toDto)
                 .toList();
@@ -43,21 +41,7 @@ public class MemberContract {
     @Transactional
     public void delete(String id) {
         memberService.delete(
-                this.findById(id)
+                memberService.findByIdAndValidateExistence(UUID.fromString(id))
         );
-    }
-
-    private Member findById(String id) {
-        return memberService.findByIdAndDeletedAtIsNull(UUID.fromString(id))
-                .orElseThrow(MemberNotFoundException::new);
-    }
-
-    private Workspace findWorkspaceById(String workspaceId) {
-        Workspace workspace = workspaceService.findByIdAndDeletedAtIsNull(UUID.fromString(workspaceId))
-                .orElseThrow(WorkspaceNotFoundException::new);
-
-        workspaceValidator.validUserLoggedInIsMemberByWorkspace(workspace);
-
-        return workspace;
     }
 }

@@ -41,7 +41,7 @@ public class MethodService {
     }
 
     @Transactional
-    public Method findByIdAndValidUserLoggedInIsMember(UUID id) {
+    public Method findByIdAndValidateExistenceAndMembershipByWorkspace(UUID id) {
         Method method = this.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(PaymentMethodNotFoundException::new);
 
