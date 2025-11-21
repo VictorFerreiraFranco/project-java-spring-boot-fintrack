@@ -25,18 +25,20 @@ public class CategoryContract {
     private final CategoryService categoryService;
     private final WorkspaceService workspaceService;
     private final CategoryMapper categoryMapper;
-    private final WorkspaceValidator workspaceValidator;
 
     @Transactional(readOnly = true)
     public CategoryResponse getById(String id) {
         return categoryMapper.toResponse(
-            this.findById(id)
+                categoryService.findByIdAndValidateExistenceAndMembership(UUID.fromString(id))
         );
     }
 
     @Transactional(readOnly = true)
     public List<CategoryResponse> searchAllByWorkspace(String workspaceId, CategoryFilter filter) {
-        return categoryService.searchAllByWorkspace(this.findWorkspaceById(workspaceId), filter)
+        return categoryService.searchAllByWorkspace(
+                        workspaceService.findByIdAndValidateExistenceAndMembership(UUID.fromString(workspaceId)),
+                        filter
+                )
                 .stream()
                 .map(categoryMapper::toResponse)
                 .toList();
@@ -51,7 +53,10 @@ public class CategoryContract {
     @Transactional()
     public CategoryResponse register(String workspaceId, CategoryRequest request) {
         Category category = categoryMapper.toEntity(request);
-        category.setWorkspace(this.findWorkspaceById(workspaceId));
+        category.setWorkspace(
+                workspaceService.findByIdAndValidateExistenceAndMembership(UUID.fromString(workspaceId))
+        );
+        
         return categoryMapper.toResponse(
                 categoryService.save(category)
         );
@@ -59,7 +64,7 @@ public class CategoryContract {
 
     @Transactional()
     public CategoryResponse update(String id, CategoryRequest request) {
-        Category category = this.findById(id);
+        Category category = categoryService.findByIdAndValidateExistenceAndMembership(UUID.fromString(id));
         categoryMapper.updateEntity(category, request);
         return categoryMapper.toResponse(
                 categoryService.save(category)
@@ -69,25 +74,7 @@ public class CategoryContract {
     @Transactional()
     public void delete(String id) {
         categoryService.delete(
-                this.findById(id)
+                this.categoryService.findByIdAndValidateExistenceAndMembership(UUID.fromString(id))
         );
-    }
-
-    private Category findById(String id) {
-        Category category = categoryService.findByIdAndDeletedAtIsNull(UUID.fromString(id))
-                .orElseThrow(CategoryNotFoundException::new);
-
-        workspaceValidator.userLoggedInIsNotMemberByWorkspace(category.getWorkspace());
-
-        return category;
-    }
-
-    private Workspace findWorkspaceById(String workspaceId) {
-        Workspace workspace = workspaceService.findByIdAndDeletedAtIsNull(UUID.fromString(workspaceId))
-                .orElseThrow(WorkspaceNotFoundException::new);
-
-        workspaceValidator.userLoggedInIsNotMemberByWorkspace(workspace);
-
-        return workspace;
     }
 }

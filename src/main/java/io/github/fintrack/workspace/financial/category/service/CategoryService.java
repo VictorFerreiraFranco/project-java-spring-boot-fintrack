@@ -2,11 +2,13 @@ package io.github.fintrack.workspace.financial.category.service;
 
 import io.github.fintrack.auth.service.AuthService;
 import io.github.fintrack.workspace.financial.category.controller.dto.CategoryFilter;
+import io.github.fintrack.workspace.financial.category.exception.CategoryNotFoundException;
 import io.github.fintrack.workspace.financial.category.model.Category;
 import io.github.fintrack.workspace.financial.category.repository.CategoryRepository;
 import io.github.fintrack.workspace.financial.category.repository.specification.CategorySpecification;
 import io.github.fintrack.workspace.financial.category.service.validator.CategoryValidator;
 import io.github.fintrack.workspace.workspace.model.Workspace;
+import io.github.fintrack.workspace.workspace.service.validator.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryValidator categoryValidator;
     private final AuthService authService;
+    private final WorkspaceValidator workspaceValidator;
 
     public Optional<Category> findByIdAndDeletedAtIsNull(UUID id) {
         return categoryRepository.findByIdAndDeletion_DeletedAtIsNull(id);
@@ -35,6 +38,16 @@ public class CategoryService {
                         .and(CategorySpecification.workspaceEqual(workspace))
                         .and(CategorySpecification.applyFilter(filter))
         );
+    }
+
+    @Transactional
+    public Category findByIdAndValidateExistenceAndMembership(UUID id) {
+        Category category = this.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(CategoryNotFoundException::new);
+
+        workspaceValidator.userLoggedInIsNotMemberByWorkspace(category.getWorkspace());
+
+        return category;
     }
 
     @Transactional
