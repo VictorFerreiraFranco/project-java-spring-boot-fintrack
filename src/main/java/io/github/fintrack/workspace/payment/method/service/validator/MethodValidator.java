@@ -18,7 +18,6 @@ public class MethodValidator {
     private final MethodRepository methodRepository;
     private final WorkspaceValidator workspaceValidator;
 
-
     public void validToSave(Method method) {
         if (methodExists(method))
             throw new DuplicateRecordException("Method already exists");

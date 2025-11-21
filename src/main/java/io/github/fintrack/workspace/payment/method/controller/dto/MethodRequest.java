@@ -6,12 +6,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record MethodRequest(
-        @NotBlank
-        @Size(min = 3, max = 255)
-        String description,
-
         @NotNull
         @Size(min = 3, max = 255)
-        Type type
+        Type type,
+
+        @NotBlank
+        @Size(min = 3, max = 255)
+        String description
 ) {
 }

@@ -1,6 +1,5 @@
 package io.github.fintrack.workspace.payment.method.model;
 
-
 import io.github.fintrack.common.model.CreatedAndDeleteEntity;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import jakarta.persistence.*;

@@ -7,7 +7,6 @@ import io.github.fintrack.workspace.workspace.model.Workspace;
 import org.springframework.data.jpa.domain.Specification;
 
 public class MethodSpecification {
-
     public static Specification<Method> applyFilter (MethodFilter filter) {
         Specification<Method> spec = (root, query, cb) -> cb.conjunction();
 

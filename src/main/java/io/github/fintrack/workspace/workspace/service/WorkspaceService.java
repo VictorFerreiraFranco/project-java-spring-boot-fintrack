@@ -38,7 +38,7 @@ public class WorkspaceService {
     }
 
     @Transactional
-    public Workspace findByIdAndValidIfIsMember(UUID id) {
+    public Workspace findByIdAndValidUserLoggedInIsMember(UUID id) {
         Workspace workspace = this.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(WorkspaceNotFoundException::new);
 

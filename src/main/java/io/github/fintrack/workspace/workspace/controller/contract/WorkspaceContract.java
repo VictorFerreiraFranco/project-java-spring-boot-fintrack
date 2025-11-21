@@ -5,10 +5,8 @@ import io.github.fintrack.workspace.workspace.controller.dto.WorkspaceDetailsRes
 import io.github.fintrack.workspace.workspace.controller.dto.WorkspaceRequest;
 import io.github.fintrack.workspace.workspace.controller.dto.WorkspaceSingleResponse;
 import io.github.fintrack.workspace.workspace.controller.mapper.WorkspaceMapper;
-import io.github.fintrack.workspace.workspace.exception.WorkspaceNotFoundException;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import io.github.fintrack.workspace.workspace.service.WorkspaceService;
-import io.github.fintrack.workspace.workspace.service.validator.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +25,7 @@ public class WorkspaceContract {
     @Transactional(readOnly = true)
     public WorkspaceDetailsResponse getById(String id) {
         return workspaceMapper.toDetailsResponse(
-                workspaceService.findByIdAndValidIfIsMember(UUID.fromString(id))
+                workspaceService.findByIdAndValidUserLoggedInIsMember(UUID.fromString(id))
         );
     }
 
@@ -51,7 +49,7 @@ public class WorkspaceContract {
     public WorkspaceSingleResponse update(String id, WorkspaceRequest request) {
         Workspace workspaceRequest = workspaceMapper.toEntity(request);
 
-        Workspace workspace =  workspaceService.findByIdAndValidIfIsMember(UUID.fromString(id));
+        Workspace workspace =  workspaceService.findByIdAndValidUserLoggedInIsMember(UUID.fromString(id));
         workspace.setName(workspaceRequest.getName());
 
         return workspaceMapper.toSingleResponse(
@@ -61,7 +59,7 @@ public class WorkspaceContract {
 
     public void delete(String id) {
         workspaceService.delete(
-                workspaceService.findByIdAndValidIfIsMember(UUID.fromString(id))
+                workspaceService.findByIdAndValidUserLoggedInIsMember(UUID.fromString(id))
         );
     }
 }

@@ -10,8 +10,8 @@ import java.util.UUID;
 
 public record MethodResponse(
         UUID id,
-        String description,
         Type type,
+        String description,
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime created
 ) {
