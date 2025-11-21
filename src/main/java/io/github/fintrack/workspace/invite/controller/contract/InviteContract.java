@@ -7,13 +7,9 @@ import io.github.fintrack.auth.service.UserService;
 import io.github.fintrack.workspace.invite.controller.dto.InviteRequest;
 import io.github.fintrack.workspace.invite.controller.dto.InviteResponse;
 import io.github.fintrack.workspace.invite.controller.mapper.InviteResponseMapper;
-import io.github.fintrack.workspace.invite.exception.InviteNotFoundException;
 import io.github.fintrack.workspace.invite.model.Invite;
 import io.github.fintrack.workspace.invite.service.InviteService;
-import io.github.fintrack.workspace.workspace.exception.WorkspaceNotFoundException;
-import io.github.fintrack.workspace.workspace.model.Workspace;
 import io.github.fintrack.workspace.workspace.service.WorkspaceService;
-import io.github.fintrack.workspace.workspace.service.validator.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,18 +26,19 @@ public class InviteContract {
     private final AuthService authService;
     private final UserService userService;
     private final InviteResponseMapper inviteResponseMapper;
-    private final WorkspaceValidator workspaceValidator;
 
     @Transactional(readOnly = true)
     public InviteResponse getById(String id) {
         return inviteResponseMapper.toDto(
-                this.findById(id)
+                inviteService.findByIdAndValidateExistence(UUID.fromString(id))
         );
     }
 
     @Transactional(readOnly = true)
     public List<InviteResponse> getAllIsPendingByWorkspace(String workspaceId) {
-        return inviteService.findAllIsPendingByWorkspace(this.findWorkspaceById(workspaceId))
+        return inviteService.findAllIsPendingByWorkspace(
+                        workspaceService.findByIdAndValidateExistenceAndMembership(UUID.fromString(workspaceId))
+                )
                 .stream()
                 .map(inviteResponseMapper::toDto)
                 .toList();
@@ -63,7 +60,11 @@ public class InviteContract {
         Invite invite = Invite.builder()
                 .from(authService.getUserLoggedIn())
                 .to(userTo)
-                .workspace((this.findWorkspaceById(request.workspaceId())))
+                .workspace(
+                        workspaceService.findByIdAndValidateExistenceAndMembership(UUID.fromString(
+                                request.workspaceId()
+                        ))
+                )
                 .build();
 
         return inviteResponseMapper.toDto(
@@ -74,35 +75,21 @@ public class InviteContract {
     @Transactional
     public void accept(String id) {
         inviteService.acceptInvite(
-            this.findById(id)
+                inviteService.findByIdAndValidateExistence(UUID.fromString(id))
         );
     }
 
     @Transactional
     public void refused(String id) {
         inviteService.refuseInvite(
-                this.findById(id)
+                inviteService.findByIdAndValidateExistence(UUID.fromString(id))
         );
     }
 
     @Transactional
     public void canceled(String id) {
         inviteService.canceledInvite(
-                this.findById(id)
+                inviteService.findByIdAndValidateExistence(UUID.fromString(id))
         );
-    }
-
-    private Invite findById(String id) {
-        return inviteService.findById(UUID.fromString(id))
-                .orElseThrow(InviteNotFoundException::new);
-    }
-
-    private Workspace findWorkspaceById(String id) {
-        Workspace workspace = workspaceService.findByIdAndDeletedAtIsNull(UUID.fromString(id))
-                .orElseThrow(WorkspaceNotFoundException::new);
-
-        workspaceValidator.validUserLoggedInIsMemberByWorkspace(workspace);
-
-        return workspace;
     }
 }

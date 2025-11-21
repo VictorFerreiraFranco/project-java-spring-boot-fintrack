@@ -1,9 +1,11 @@
 package io.github.fintrack.workspace.invite.service;
 
 import io.github.fintrack.auth.model.User;
+import io.github.fintrack.workspace.invite.exception.InviteNotFoundException;
 import io.github.fintrack.workspace.invite.model.Invite;
 import io.github.fintrack.workspace.invite.model.Status;
 import io.github.fintrack.workspace.invite.repository.InviteRepository;
+import io.github.fintrack.workspace.invite.repository.specification.InviteSpecification;
 import io.github.fintrack.workspace.invite.service.validator.InviteValidator;
 import io.github.fintrack.workspace.member.service.MemberService;
 import io.github.fintrack.workspace.workspace.model.Workspace;
@@ -28,11 +30,22 @@ public class InviteService {
     }
 
     public List<Invite> findAllIsPendingByWorkspace(Workspace workspace) {
-        return inviteRepository.findAllByWorkspaceAndStatus(workspace, Status.PENDING);
+        return inviteRepository.findAll(
+                InviteSpecification.workspaceEqual(workspace)
+                        .and(InviteSpecification.statusEqual(Status.PENDING))
+        );
     }
 
     public List<Invite> findAllIsPendingByUser(User user) {
-        return inviteRepository.findAllByStatusAndTo(Status.PENDING, user);
+        return inviteRepository.findAll(
+                InviteSpecification.toEqual(user)
+                        .and(InviteSpecification.statusEqual(Status.PENDING))
+        );
+    }
+
+    public Invite findByIdAndValidateExistence(UUID id) {
+        return this.findById(id)
+                .orElseThrow(InviteNotFoundException::new);
     }
 
     @Transactional

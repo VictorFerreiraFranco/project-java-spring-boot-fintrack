@@ -2,7 +2,6 @@ package io.github.fintrack.workspace.invite.model;
 
 import io.github.fintrack.common.model.CreatedEntity;
 import io.github.fintrack.auth.model.User;
-import io.github.fintrack.workspace.member.model.Role;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import jakarta.persistence.*;
 import lombok.*;

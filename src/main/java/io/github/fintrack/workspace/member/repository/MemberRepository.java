@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface MemberRepository extends JpaRepository<Member, UUID>, JpaSpecificationExecutor<Member> {
-
     Optional<Member> findByIdAndDeletion_DeletedAtIsNull(UUID id);
 
     Optional<Member> findByWorkspaceAndUserAndDeletion_DeletedAtIsNull(Workspace workspace, User user);
