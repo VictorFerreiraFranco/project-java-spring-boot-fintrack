@@ -56,7 +56,7 @@ public class CategoryContract {
         category.setWorkspace(
                 workspaceService.findByIdAndValidateExistenceAndMembership(UUID.fromString(workspaceId))
         );
-        
+
         return categoryMapper.toResponse(
                 categoryService.save(category)
         );
