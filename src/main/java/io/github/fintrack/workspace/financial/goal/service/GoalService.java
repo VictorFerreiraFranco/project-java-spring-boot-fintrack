@@ -5,7 +5,7 @@ import io.github.fintrack.workspace.financial.goal.controller.dto.GoalFilter;
 import io.github.fintrack.workspace.financial.goal.model.Goal;
 import io.github.fintrack.workspace.financial.goal.repository.GoalRepository;
 import io.github.fintrack.workspace.financial.goal.repository.specification.GoalSpecification;
-import io.github.fintrack.workspace.financial.goal.validator.GoalValidator;
+import io.github.fintrack.workspace.financial.goal.service.validator.GoalValidator;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

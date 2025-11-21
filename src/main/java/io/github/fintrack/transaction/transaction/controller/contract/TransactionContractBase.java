@@ -18,7 +18,7 @@ import io.github.fintrack.workspace.payment.method.service.MethodService;
 import io.github.fintrack.workspace.workspace.exception.WorkspaceNotFoundException;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import io.github.fintrack.workspace.workspace.service.WorkspaceService;
-import io.github.fintrack.workspace.workspace.validator.WorkspaceValidator;
+import io.github.fintrack.workspace.workspace.service.validator.WorkspaceValidator;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;

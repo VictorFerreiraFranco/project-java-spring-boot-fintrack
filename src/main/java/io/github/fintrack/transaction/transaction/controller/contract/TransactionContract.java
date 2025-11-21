@@ -9,13 +9,11 @@ import io.github.fintrack.transaction.transaction.model.Type;
 import io.github.fintrack.transaction.transaction.service.TransactionService;
 import io.github.fintrack.workspace.financial.category.service.CategoryService;
 import io.github.fintrack.workspace.payment.method.service.MethodService;
-import io.github.fintrack.workspace.workspace.model.Workspace;
 import io.github.fintrack.workspace.workspace.service.WorkspaceService;
-import io.github.fintrack.workspace.workspace.validator.WorkspaceValidator;
+import io.github.fintrack.workspace.workspace.service.validator.WorkspaceValidator;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 

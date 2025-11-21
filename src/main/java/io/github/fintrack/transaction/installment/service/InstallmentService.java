@@ -2,7 +2,7 @@ package io.github.fintrack.transaction.installment.service;
 
 import io.github.fintrack.transaction.installment.model.Installment;
 import io.github.fintrack.transaction.installment.repository.InstallmentRepository;
-import io.github.fintrack.transaction.installment.validator.InstallmentValidator;
+import io.github.fintrack.transaction.installment.service.validator.InstallmentValidator;
 import io.github.fintrack.transaction.transaction.model.Transaction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

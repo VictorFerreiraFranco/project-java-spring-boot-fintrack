@@ -5,7 +5,7 @@ import io.github.fintrack.workspace.financial.category.controller.dto.CategoryFi
 import io.github.fintrack.workspace.financial.category.model.Category;
 import io.github.fintrack.workspace.financial.category.repository.CategoryRepository;
 import io.github.fintrack.workspace.financial.category.repository.specification.CategorySpecification;
-import io.github.fintrack.workspace.financial.category.validator.CategoryValidator;
+import io.github.fintrack.workspace.financial.category.service.validator.CategoryValidator;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

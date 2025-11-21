@@ -1,4 +1,4 @@
-package io.github.fintrack.workspace.invite.validator;
+package io.github.fintrack.workspace.invite.service.validator;
 
 import io.github.fintrack.auth.service.AuthService;
 import io.github.fintrack.common.exception.DuplicateRecordException;

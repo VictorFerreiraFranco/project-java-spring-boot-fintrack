@@ -5,7 +5,7 @@ import io.github.fintrack.workspace.payment.method.controller.dto.MethodFilter;
 import io.github.fintrack.workspace.payment.method.model.Method;
 import io.github.fintrack.workspace.payment.method.repository.MethodRepository;
 import io.github.fintrack.workspace.payment.method.repository.specification.MethodSpecification;
-import io.github.fintrack.workspace.payment.method.validator.MethodValidator;
+import io.github.fintrack.workspace.payment.method.service.validator.MethodValidator;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

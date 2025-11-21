@@ -1,10 +1,9 @@
-package io.github.fintrack.workspace.financial.category.validator;
+package io.github.fintrack.workspace.financial.category.service.validator;
 
 import io.github.fintrack.common.exception.DuplicateRecordException;
-import io.github.fintrack.workspace.financial.category.exception.CategoryNotFoundException;
 import io.github.fintrack.workspace.financial.category.model.Category;
 import io.github.fintrack.workspace.financial.category.repository.CategoryRepository;
-import io.github.fintrack.workspace.workspace.validator.WorkspaceValidator;
+import io.github.fintrack.workspace.workspace.service.validator.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

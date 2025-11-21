@@ -1,17 +1,15 @@
-package io.github.fintrack.workspace.payment.method.validator;
+package io.github.fintrack.workspace.payment.method.service.validator;
 
 import io.github.fintrack.common.exception.DuplicateRecordException;
 import io.github.fintrack.workspace.payment.method.controller.dto.MethodFilter;
-import io.github.fintrack.workspace.payment.method.exception.PaymentMethodNotFoundException;
 import io.github.fintrack.workspace.payment.method.model.Method;
 import io.github.fintrack.workspace.payment.method.repository.MethodRepository;
 import io.github.fintrack.workspace.payment.method.repository.specification.MethodSpecification;
-import io.github.fintrack.workspace.workspace.validator.WorkspaceValidator;
+import io.github.fintrack.workspace.workspace.service.validator.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor

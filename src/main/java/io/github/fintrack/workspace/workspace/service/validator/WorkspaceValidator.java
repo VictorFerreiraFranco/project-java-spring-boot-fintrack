@@ -1,4 +1,4 @@
-package io.github.fintrack.workspace.workspace.validator;
+package io.github.fintrack.workspace.workspace.service.validator;
 
 import io.github.fintrack.auth.model.User;
 import io.github.fintrack.auth.service.AuthService;

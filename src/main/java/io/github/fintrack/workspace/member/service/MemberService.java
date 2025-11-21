@@ -6,7 +6,7 @@ import io.github.fintrack.workspace.invite.model.Invite;
 import io.github.fintrack.workspace.member.model.Member;
 import io.github.fintrack.workspace.member.model.Role;
 import io.github.fintrack.workspace.member.repository.MemberRepository;
-import io.github.fintrack.workspace.member.validator.MemberValidator;
+import io.github.fintrack.workspace.member.service.validator.MemberValidator;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

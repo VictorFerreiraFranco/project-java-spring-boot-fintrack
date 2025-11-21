@@ -1,9 +1,9 @@
-package io.github.fintrack.workspace.financial.goal.validator;
+package io.github.fintrack.workspace.financial.goal.service.validator;
 
 import io.github.fintrack.common.exception.DuplicateRecordException;
 import io.github.fintrack.workspace.financial.goal.model.Goal;
 import io.github.fintrack.workspace.financial.goal.repository.GoalRepository;
-import io.github.fintrack.workspace.workspace.validator.WorkspaceValidator;
+import io.github.fintrack.workspace.workspace.service.validator.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

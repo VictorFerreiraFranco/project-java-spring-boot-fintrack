@@ -1,4 +1,4 @@
-package io.github.fintrack.transaction.installment.validator;
+package io.github.fintrack.transaction.installment.service.validator;
 
 import io.github.fintrack.common.exception.DuplicateRecordException;
 import io.github.fintrack.transaction.installment.model.Installment;

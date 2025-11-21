@@ -2,8 +2,7 @@ package io.github.fintrack.transaction.transaction.validator;
 
 import io.github.fintrack.transaction.transaction.exception.InvalidArgumentsTransactionException;
 import io.github.fintrack.transaction.transaction.model.Transaction;
-import io.github.fintrack.transaction.transaction.repository.TransactionRepository;
-import io.github.fintrack.workspace.workspace.validator.WorkspaceValidator;
+import io.github.fintrack.workspace.workspace.service.validator.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

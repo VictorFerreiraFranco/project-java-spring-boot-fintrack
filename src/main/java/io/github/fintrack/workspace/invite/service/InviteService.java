@@ -4,7 +4,7 @@ import io.github.fintrack.auth.model.User;
 import io.github.fintrack.workspace.invite.model.Invite;
 import io.github.fintrack.workspace.invite.model.Status;
 import io.github.fintrack.workspace.invite.repository.InviteRepository;
-import io.github.fintrack.workspace.invite.validator.InviteValidator;
+import io.github.fintrack.workspace.invite.service.validator.InviteValidator;
 import io.github.fintrack.workspace.member.service.MemberService;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import lombok.RequiredArgsConstructor;

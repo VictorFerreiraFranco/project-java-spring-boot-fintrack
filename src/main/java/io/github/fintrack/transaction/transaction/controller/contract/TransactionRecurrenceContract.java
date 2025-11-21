@@ -8,7 +8,7 @@ import io.github.fintrack.transaction.transaction.service.TransactionService;
 import io.github.fintrack.workspace.financial.category.service.CategoryService;
 import io.github.fintrack.workspace.payment.method.service.MethodService;
 import io.github.fintrack.workspace.workspace.service.WorkspaceService;
-import io.github.fintrack.workspace.workspace.validator.WorkspaceValidator;
+import io.github.fintrack.workspace.workspace.service.validator.WorkspaceValidator;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
