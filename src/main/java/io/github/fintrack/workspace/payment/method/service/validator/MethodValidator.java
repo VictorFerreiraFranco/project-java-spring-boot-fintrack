@@ -34,8 +34,8 @@ public class MethodValidator {
                 MethodSpecification.deletedAtIsNull()
                         .and(MethodSpecification.workspaceEqual(method.getWorkspace()))
                         .and(MethodSpecification.applyFilter(new MethodFilter(
-                                method.getDescription(),
-                                method.getType().toString()
+                                method.getType().toString(),
+                                method.getDescription()
                         )))
         );
 
