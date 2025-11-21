@@ -15,7 +15,7 @@ public class InviteSpecification {
 
     public static Specification<Invite> toEqual(User to) {
         return (root, criteriaQuery, criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("user"), to);
+                criteriaBuilder.equal(root.get("to"), to);
     }
 
     public static Specification<Invite> statusEqual(Status status) {
