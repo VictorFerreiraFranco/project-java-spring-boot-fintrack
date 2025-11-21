@@ -1,6 +1,6 @@
 package io.github.fintrack.workspace.financial.category.repository;
 
-import io.github.fintrack.transaction.model.Type;
+import io.github.fintrack.transaction.transaction.model.Type;
 import io.github.fintrack.workspace.financial.category.model.Category;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import org.springframework.data.jpa.repository.JpaRepository;

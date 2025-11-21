@@ -5,7 +5,7 @@ import io.github.fintrack.auth.model.User;
 import io.github.fintrack.workspace.member.model.Member;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class Workspace extends CreatedAndDeleteEntity {
     private Type type;
 
     @OneToMany(mappedBy = "workspace", fetch = FetchType.LAZY)
-    @Where(clause = "deleted_at IS NULL")
+    @SQLRestriction("deleted_at IS NULL")
     private List<Member> members;
 
     @Builder

@@ -1,4 +1,4 @@
-package io.github.fintrack.transaction.model;
+package io.github.fintrack.transaction.transaction.model;
 
 import lombok.Getter;
 

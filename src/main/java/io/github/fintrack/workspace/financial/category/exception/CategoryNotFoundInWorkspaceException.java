@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class CategoryNotFoundException extends ResourceNotFoundException {
-    public CategoryNotFoundException() {
-        super("Category not found");
+public class CategoryNotFoundInWorkspaceException extends ResourceNotFoundException {
+    public CategoryNotFoundInWorkspaceException() {
+        super("Category not found in workspace");
     }
 }

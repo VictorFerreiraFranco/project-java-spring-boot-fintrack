@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
 public class GoalNotFoundException extends ResourceNotFoundException {
     public GoalNotFoundException() {
-        super("Goal already exists");
+        super("Goal not found");
     }
 }

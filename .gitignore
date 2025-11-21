@@ -32,3 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 /sql/postgresql/data
+*.log

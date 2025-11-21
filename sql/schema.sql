@@ -117,3 +117,42 @@ CREATE TABLE financial_category_goals
     FOREIGN KEY (created_by) REFERENCES users (id),
     FOREIGN KEY (deleted_by) REFERENCES users (id)
 );
+
+drop table if exists transactions cascade;
+CREATE TABLE transactions
+(
+    id                      uuid           not null primary key,
+    type                    varchar(255)   not null,
+    workspace_id            uuid           not null,
+    financial_category_id   uuid           not null,
+    payment_method_id       uuid           not null,
+    description             varchar(255)   not null,
+    amount                  numeric(15, 2) not null,
+    amount_installment      numeric(15, 2) null,
+    start_date              date           not null,
+    end_date                date           null,
+    total_installment       int            not null,
+    recurrence              boolean        not null default false,
+    created_by              uuid           not null,
+    created_at              timestamp      not null,
+    observation             text           null,
+    deleted_by              uuid           null,
+    deleted_at              timestamp      null,
+    FOREIGN KEY (workspace_id) REFERENCES workspaces (id),
+    FOREIGN KEY (financial_category_id) REFERENCES financial_categories (id),
+    FOREIGN KEY (payment_method_id) REFERENCES payment_methods (id),
+    FOREIGN KEY (created_by) REFERENCES users (id),
+    FOREIGN KEY (deleted_by) REFERENCES users (id)
+);
+
+drop table if exists installments cascade;
+CREATE TABLE installments
+(
+    id                      uuid           not null primary key,
+    transaction_id          uuid           not null,
+    amount                  numeric(15, 2) not null,
+    date                    date           not null,
+    was_paid                boolean        not null default false,
+    installment_number      int            not null,
+    FOREIGN KEY (transaction_id) REFERENCES transactions (id)
+);
