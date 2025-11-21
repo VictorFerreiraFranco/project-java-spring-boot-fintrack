@@ -7,12 +7,9 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface InstallmentRepository extends JpaRepository<Installment, UUID>, JpaSpecificationExecutor<Installment> {
-
-    Optional<Installment> findByTransactionAndDate(Transaction transaction, LocalDate date);
 
     List<Installment> findAllByTransactionAndDateBetween(Transaction transaction, LocalDate dateAfter, LocalDate dateBefore);
 }

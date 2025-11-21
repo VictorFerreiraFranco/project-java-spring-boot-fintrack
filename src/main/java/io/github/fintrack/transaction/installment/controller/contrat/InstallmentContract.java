@@ -27,6 +27,5 @@ public class InstallmentContract {
                 .stream()
                 .map(installmentMapper::toPreviewResponse)
                 .toList();
-
     }
 }
