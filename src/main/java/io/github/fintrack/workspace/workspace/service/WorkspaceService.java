@@ -3,10 +3,12 @@ package io.github.fintrack.workspace.workspace.service;
 import io.github.fintrack.auth.model.User;
 import io.github.fintrack.auth.service.AuthService;
 import io.github.fintrack.workspace.member.service.MemberService;
+import io.github.fintrack.workspace.workspace.exception.WorkspaceNotFoundException;
 import io.github.fintrack.workspace.workspace.model.Type;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import io.github.fintrack.workspace.workspace.repository.WorkspaceRepository;
-import io.github.fintrack.workspace.workspace.validator.WorkspaceValidator;
+import io.github.fintrack.workspace.workspace.repository.specification.WorkspaceSpecification;
+import io.github.fintrack.workspace.workspace.service.validator.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +31,20 @@ public class WorkspaceService {
     }
 
     public List<Workspace> findAllByMembersUserAndDeletedAtIsNull(User user) {
-        return workspaceRepository.findAllByMembers_UserAndDeletion_DeletedAtIsNull(user);
+        return workspaceRepository.findAll(
+                WorkspaceSpecification.membersUserEqual(user)
+                        .and(WorkspaceSpecification.deletedAtIsNull())
+        );
+    }
+
+    @Transactional
+    public Workspace findByIdAndValidIfIsMember(UUID id) {
+        Workspace workspace = this.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(WorkspaceNotFoundException::new);
+
+        workspaceValidator.validUserLoggedInIsMemberByWorkspace(workspace);
+
+        return workspace;
     }
 
     public Workspace save(Workspace workspace) {

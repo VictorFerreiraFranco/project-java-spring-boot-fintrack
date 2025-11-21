@@ -8,7 +8,7 @@ import io.github.fintrack.workspace.workspace.controller.mapper.WorkspaceMapper;
 import io.github.fintrack.workspace.workspace.exception.WorkspaceNotFoundException;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import io.github.fintrack.workspace.workspace.service.WorkspaceService;
-import io.github.fintrack.workspace.workspace.validator.WorkspaceValidator;
+import io.github.fintrack.workspace.workspace.service.validator.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,12 +23,11 @@ public class WorkspaceContract {
     private final WorkspaceService workspaceService;
     private final AuthService authService;
     private final WorkspaceMapper workspaceMapper;
-    private final WorkspaceValidator workspaceValidator;
 
     @Transactional(readOnly = true)
     public WorkspaceDetailsResponse getById(String id) {
         return workspaceMapper.toDetailsResponse(
-            this.findById(id)
+                workspaceService.findByIdAndValidIfIsMember(UUID.fromString(id))
         );
     }
 
@@ -49,11 +48,10 @@ public class WorkspaceContract {
         );
     }
 
-    @Transactional
     public WorkspaceSingleResponse update(String id, WorkspaceRequest request) {
         Workspace workspaceRequest = workspaceMapper.toEntity(request);
 
-        Workspace workspace = this.findById(id);
+        Workspace workspace =  workspaceService.findByIdAndValidIfIsMember(UUID.fromString(id));
         workspace.setName(workspaceRequest.getName());
 
         return workspaceMapper.toSingleResponse(
@@ -61,19 +59,9 @@ public class WorkspaceContract {
         );
     }
 
-    @Transactional
     public void delete(String id) {
         workspaceService.delete(
-                this.findById(id)
+                workspaceService.findByIdAndValidIfIsMember(UUID.fromString(id))
         );
-    }
-
-    private Workspace findById(String id) {
-        Workspace workspace = workspaceService.findByIdAndDeletedAtIsNull(UUID.fromString(id))
-                .orElseThrow(WorkspaceNotFoundException::new);
-
-        workspaceValidator.validUserLoggedInIsMemberByWorkspace(workspace);
-
-        return workspace;
     }
 }
