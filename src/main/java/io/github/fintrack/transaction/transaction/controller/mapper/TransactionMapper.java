@@ -29,12 +29,18 @@ public interface TransactionMapper {
     @Mapping(target = "method", ignore = true)
     @Mapping(target = "recurrence", expression = "java( Boolean.FALSE )")
     @Mapping(target = "installments", expression = "java( java.util.List.of() )")
+    @Mapping(target = "workspace", ignore = true)
+    @Mapping(target = "amountInstallment", ignore = true)
+    @Mapping(target = "endDate", ignore = true)
     Transaction toTransactionByRequest(TransactionRequest request);
 
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "method", ignore = true)
     @Mapping(target = "recurrence", expression = "java( Boolean.TRUE )")
     @Mapping(target = "installments", expression = "java( java.util.List.of() )")
+    @Mapping(target = "workspace", ignore = true)
+    @Mapping(target = "amount", ignore = true)
+    @Mapping(target = "totalInstallment", ignore = true)
     Transaction toTransactionByRequestRecurrence(TransactionRecurrenceRequest request);
 
     @Mapping(target = "id", ignore = true)
@@ -55,6 +61,8 @@ public interface TransactionMapper {
     @Mapping(target = "method", ignore = true)
     @Mapping(target = "recurrence", ignore = true)
     @Mapping(target = "installments", ignore = true)
+    @Mapping(target = "amount", ignore = true)
+    @Mapping(target = "totalInstallment", ignore = true)
     @Mapping(target = "creation", ignore = true)
     @Mapping(target = "deletion", ignore = true)
     void updateEntityByRequestRecurrence(@MappingTarget Transaction entity, TransactionRecurrenceRequest request);

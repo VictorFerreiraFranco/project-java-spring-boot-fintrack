@@ -13,6 +13,7 @@ public interface MethodMapper {
     @Mapping(target = "created", expression = "java( method.getCreation().getCreatedAt() )")
     MethodResponse toResponse(Method method);
 
+    @Mapping(target = "workspace", ignore = true)
     Method toEntity(MethodRequest methodRequest);
 
     @Mapping(target = "id", ignore = true)

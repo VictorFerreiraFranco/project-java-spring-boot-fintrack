@@ -17,6 +17,7 @@ public interface GoalMapper {
     @Mapping(target = "created", expression = "java( goal.getCreation().getCreatedAt() )")
     GoalResponse toResponse(Goal goal);
 
+    @Mapping(target = "category", ignore = true)
     Goal toEntity(GoalRequest request);
 
     @Mapping(target = "id", ignore = true)

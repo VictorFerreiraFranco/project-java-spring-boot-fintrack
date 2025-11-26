@@ -18,6 +18,8 @@ public abstract class WorkspaceMapper {
     @Autowired
     protected MemberResponseMapper memberResponseMapper;
 
+    @Mapping(target = "type", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
     public abstract Workspace toEntity(WorkspaceRequest request);
 
     @Mapping(target = "created", expression = "java( entity.getCreation().getCreatedAt() )")

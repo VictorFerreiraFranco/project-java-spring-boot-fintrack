@@ -15,5 +15,13 @@ public interface InstallmentMapper {
 
     @Mapping(target = "recurrence", expression = "java( Boolean.FALSE )")
     @Mapping(target = "installments", expression = "java( java.util.List.of() )")
+    @Mapping(target = "type", ignore = true)
+    @Mapping(target = "workspace", ignore = true)
+    @Mapping(target = "category", ignore = true)
+    @Mapping(target = "method", ignore = true)
+    @Mapping(target = "description", ignore = true)
+    @Mapping(target = "amountInstallment", ignore = true)
+    @Mapping(target = "endDate", ignore = true)
+    @Mapping(target = "observation", ignore = true)
     Transaction toTransactionTemporary(InstallmentPreviewRequest previewRequest);
 }

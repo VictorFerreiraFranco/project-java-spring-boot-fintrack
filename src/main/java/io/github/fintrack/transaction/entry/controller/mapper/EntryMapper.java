@@ -35,6 +35,7 @@ public interface EntryMapper {
 
     SingleCategoryResponse toCategoryResponse(Category category);
 
+    @Mapping(target = "installment", source = "installment.installmentNumber")
     InstallmentResponse toInstallmentResponse(Installment installment);
 
     default Map<Integer, InstallmentResponse> installmentsToMap(List<Installment> installments) {

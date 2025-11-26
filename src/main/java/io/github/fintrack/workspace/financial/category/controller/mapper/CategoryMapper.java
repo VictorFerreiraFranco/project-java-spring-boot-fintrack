@@ -12,6 +12,7 @@ public interface CategoryMapper {
     @Mapping(target = "created", expression = "java( category.getCreation().getCreatedAt() )")
     CategoryResponse toResponse(Category category);
 
+    @Mapping(target = "workspace", ignore = true)
     Category toEntity(CategoryRequest request);
 
     @Mapping(target = "id", ignore = true)
