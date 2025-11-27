@@ -3,7 +3,7 @@ package io.github.fintrack.auth.service;
 import io.github.fintrack.auth.model.Role;
 import io.github.fintrack.auth.model.User;
 import io.github.fintrack.auth.repository.UserRepository;
-import io.github.fintrack.auth.validator.UserValidator;
+import io.github.fintrack.auth.service.validator.UserValidator;
 import io.github.fintrack.workspace.workspace.service.WorkspaceService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

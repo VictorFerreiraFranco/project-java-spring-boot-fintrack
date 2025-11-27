@@ -2,11 +2,9 @@ package io.github.fintrack.common.config.jpa;
 
 import io.github.fintrack.auth.model.User;
 import io.github.fintrack.auth.service.AuthService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.Optional;
 
