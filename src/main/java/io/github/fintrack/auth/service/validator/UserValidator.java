@@ -1,4 +1,4 @@
-package io.github.fintrack.auth.validator;
+package io.github.fintrack.auth.service.validator;
 
 import io.github.fintrack.common.exception.DuplicateRecordException;
 import io.github.fintrack.auth.model.User;
