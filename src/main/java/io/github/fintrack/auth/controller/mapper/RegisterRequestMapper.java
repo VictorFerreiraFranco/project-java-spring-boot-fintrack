@@ -7,7 +7,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface RegisterRequestMapper {
-
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "role", ignore = true)
     User toEntity(RegisterRequest registerRequest);
