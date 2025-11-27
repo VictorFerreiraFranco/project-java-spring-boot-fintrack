@@ -84,4 +84,28 @@ public class UserValidatorTest {
 
         verify(userRepository).findByEmail(email);
     }
+
+    @Test
+    @DisplayName("Should throw exception if user exists in update")
+    void shouldThrowIfUserExistsInUpdate(){
+        String email = "test@example.com";
+
+        User existingUser = User.builder()
+                .id(UUID.randomUUID())
+                .email(email)
+                .build();
+
+        User updatingUser = User.builder()
+                .id(UUID.randomUUID())
+                .email(email)
+                .build();
+
+        when(userRepository.findByEmail(email))
+                .thenReturn(Optional.of(existingUser));
+
+        Assertions.assertThatThrownBy(() -> userValidator.validToSave(updatingUser))
+                .isInstanceOf(DuplicateRecordException.class);
+
+        verify(userRepository).findByEmail(email);
+    }
 }
