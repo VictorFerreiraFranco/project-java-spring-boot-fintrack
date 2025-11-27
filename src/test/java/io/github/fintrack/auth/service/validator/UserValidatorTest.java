@@ -1,9 +1,8 @@
-package io.github.fintrack.auth.validator;
+package io.github.fintrack.auth.service.validator;
 
 import io.github.fintrack.auth.model.Role;
 import io.github.fintrack.auth.model.User;
 import io.github.fintrack.auth.repository.UserRepository;
-import io.github.fintrack.auth.service.validator.UserValidator;
 import io.github.fintrack.common.exception.DuplicateRecordException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

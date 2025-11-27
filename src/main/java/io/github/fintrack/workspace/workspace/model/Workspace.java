@@ -36,6 +36,8 @@ public class Workspace extends CreatedAndDeleteEntity {
     }
 
     public Member getOwner() {
+        if (members == null) return null;
+
         return members.stream()
                 .filter(Member::isOwner)
                 .findFirst()
