@@ -14,6 +14,7 @@ import io.github.fintrack.workspace.payment.method.model.Method;
 import io.github.fintrack.workspace.payment.method.repository.MethodRepository;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import io.github.fintrack.workspace.workspace.repository.WorkspaceRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,6 +52,7 @@ public class TransactionSpecificationIntegrationTest {
     private InstallmentRepository installmentRepository;
 
     private User user;
+    private Workspace workspace;
     private Transaction transaction;
 
     @BeforeEach
@@ -63,7 +64,7 @@ public class TransactionSpecificationIntegrationTest {
         user.setRole(Role.USER);
         userRepository.save(user);
 
-        Workspace workspace = new Workspace();
+        workspace = new Workspace();
         workspace.setName("Test Workspace");
         workspace.setType(io.github.fintrack.workspace.workspace.model.Type.MAIN);
         workspace.getCreation().setCreatedBy(user);
@@ -72,7 +73,7 @@ public class TransactionSpecificationIntegrationTest {
 
         Category category = new Category();
         category.setDescription("Test Category");
-        category.setColor("#FFFFFF");
+        category.setColor("#FFF");
         category.setWorkspace(workspace);
         category.setType(Type.EXPENSE);
         category.getCreation().setCreatedBy(user);
@@ -88,80 +89,71 @@ public class TransactionSpecificationIntegrationTest {
         methodRepository.save(method);
 
         transaction = new Transaction();
-        transaction.setType(Type.EXPENSE);
         transaction.setWorkspace(workspace);
         transaction.setCategory(category);
         transaction.setMethod(method);
+        transaction.setType(Type.EXPENSE);
         transaction.setDescription("Test Transaction");
         transaction.setAmount(BigDecimal.TEN);
         transaction.setAmountInstallment(BigDecimal.ONE);
-        transaction.setStartDate(LocalDate.now());
+        transaction.setStartDate(LocalDate.of(2024, 1, 1));
         transaction.setTotalInstallment(10);
         transaction.setRecurrence(false);
         transaction.getCreation().setCreatedBy(user);
         transaction.getCreation().setCreatedAt(LocalDateTime.now());
-
         transactionRepository.save(transaction);
     }
 
     @Test
-    @DisplayName("Should find by id and deletedAt is null")
-    void shouldFindByIdWhenNotDeleted() {
-        var result = transactionRepository.findByIdAndDeletionDeletedAtIsNull(transaction.getId());
+    @DisplayName("deletedAtIsNull: should return transaction when not deleted")
+    void shouldReturnTransactionWhenNotDeleted() {
+        var spec = TransactionSpecification.deletedAtIsNull();
 
-        assertThat(result).isPresent();
-        assertThat(result.get().getDescription()).isEqualTo(transaction.getDescription());
+        var results = transactionRepository.findAll(spec);
+
+        assertThat(results).hasSize(1);
+        assertThat(results.getFirst().getId()).isEqualTo(transaction.getId());
     }
 
     @Test
-    @DisplayName("Should not find by id when deletedAt is not null")
-    void shouldNotFindByIdWhenDeletedAtIsNotNull() {
+    @DisplayName("deletedAtIsNull: should not return deleted transaction")
+    void shouldNotReturnWhenDeleted() {
         transaction.getDeletion().markAsDeleted(user);
         transactionRepository.save(transaction);
 
-        var result = transactionRepository.findByIdAndDeletionDeletedAtIsNull(transaction.getId());
+        var spec = TransactionSpecification.deletedAtIsNull();
+        var results = transactionRepository.findAll(spec);
 
-        assertThat(result).isEmpty();
+        assertThat(results).isEmpty();
     }
 
     @Test
-    @DisplayName("Should save installments and retrieve them correctly")
-    void shouldSaveAndRetrieveInstallments() {
-        Installment installment = new Installment();
-        installment.setTransaction(transaction);
-        installment.setAmount(BigDecimal.ONE);
-        installment.setDate(LocalDate.now());
-        installment.setWasPaid(false);
-        installment.setInstallmentNumber(1);
+    @DisplayName("endDateIsNull: should return transaction with null endDate")
+    void shouldReturnWhenEndDateIsNull() {
+        var spec = TransactionSpecification.endDateIsNull();
+        var results = transactionRepository.findAll(spec);
 
-        installmentRepository.save(installment);
-
-        transaction.setInstallments(List.of(installment));
-
-        var result = transactionRepository.findById(transaction.getId());
-
-        assertThat(result).isPresent();
-        assertThat(result.get().getInstallments()).hasSize(1);
-        assertThat(result.get().getInstallments().getFirst().getAmount()).isEqualTo(BigDecimal.ONE);
+        assertThat(results).hasSize(1);
     }
 
     @Test
-    @DisplayName("Should update transaction description")
-    void shouldUpdateTransaction() {
-        transaction.setDescription("Updated Transaction");
-        transactionRepository.save(transaction);
+    @DisplayName("workspaceEqual: should return only transactions from workspace")
+    void shouldMatchWorkspace() {
+        var spec = TransactionSpecification.workspaceEqual(workspace);
 
-        var result = transactionRepository.findById(transaction.getId());
+        var results = transactionRepository.findAll(spec);
 
-        assertThat(result).isPresent();
-        assertThat(result.get().getDescription()).isEqualTo("Updated Transaction");
+        assertThat(results).hasSize(1);
+        assertThat(results.getFirst().getWorkspace()).isEqualTo(workspace);
     }
 
     @Test
-    @DisplayName("Should return empty when transaction does not exist")
-    void shouldReturnEmptyWhenNotFound() {
-        var result = transactionRepository.findByIdAndDeletionDeletedAtIsNull(UUID.randomUUID());
+    @DisplayName("startDateThanOrEqual: should filter startDate correctly")
+    void shouldFilterByStartDate() {
+        var spec = TransactionSpecification.startDateThanOrEqual(LocalDate.of(2023, 12, 31));
 
-        assertThat(result).isEmpty();
+        var results = transactionRepository.findAll(spec);
+
+        assertThat(results).hasSize(1);
     }
 }
