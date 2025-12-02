@@ -60,7 +60,7 @@ public class WorkspaceRepositoryTest {
     @Test
     @DisplayName("Should findByIdAndDeletionDeletedAtIsNull")
     void shouldIfNotExistfindByIdAndDeletionDeletedAtIsNull() {
-        Assertions.assertThat(workspaceRepository.findAll()).isEmpty();
+        assertThat(workspaceRepository.findAll()).isEmpty();
 
         Workspace workspace = this.createWorkspace(user);
 
@@ -69,8 +69,9 @@ public class WorkspaceRepositoryTest {
 
         workspaceRepository.save(workspace);
 
-        Assertions.assertThat(workspaceRepository.findAll()).isNotEmpty();
-        Assertions.assertThat(workspaceRepository.findByIdAndDeletionDeletedAtIsNull(workspace.getId())).isNotPresent();
+        assertThat(workspace.getDeletion().isDeleted()).isTrue();
+        assertThat(workspaceRepository.findAll()).isNotEmpty();
+        assertThat(workspaceRepository.findByIdAndDeletionDeletedAtIsNull(workspace.getId())).isNotPresent();
     }
 
     private Workspace createWorkspace(User user) {
