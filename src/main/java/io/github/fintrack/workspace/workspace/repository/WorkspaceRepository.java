@@ -8,5 +8,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface WorkspaceRepository extends JpaRepository<Workspace, UUID>, JpaSpecificationExecutor<Workspace> {
-    Optional<Workspace> findByIdAndDeletion_DeletedAtIsNull(UUID uuid);
+    Optional<Workspace> findByIdAndDeletionDeletedAtIsNull(UUID uuid);
 }

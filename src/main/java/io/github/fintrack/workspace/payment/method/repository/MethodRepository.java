@@ -8,5 +8,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface MethodRepository extends JpaRepository<Method, UUID>, JpaSpecificationExecutor<Method> {
-    Optional<Method> findByIdAndDeletion_DeletedAtIsNull(UUID id);
+    Optional<Method> findByIdAndDeletionDeletedAtIsNull(UUID id);
 }

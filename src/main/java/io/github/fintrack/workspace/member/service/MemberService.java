@@ -27,7 +27,7 @@ public class MemberService {
     private final AuthService authService;
 
     public Optional<Member> findByIdAndDeletedAtIsNull(UUID id) {
-        return memberRepository.findByIdAndDeletion_DeletedAtIsNull(id);
+        return memberRepository.findByIdAndDeletionDeletedAtIsNull(id);
     }
 
     public List<Member> findAllByWorkspaceAndDeletedAtIsNull(Workspace workspace) {

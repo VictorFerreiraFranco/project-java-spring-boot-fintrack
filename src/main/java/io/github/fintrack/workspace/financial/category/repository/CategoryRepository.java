@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface CategoryRepository extends JpaRepository<Category, UUID>, JpaSpecificationExecutor<Category> {
-    Optional<Category> findByIdAndDeletion_DeletedAtIsNull(UUID id);
+    Optional<Category> findByIdAndDeletionDeletedAtIsNull(UUID id);
 
-    Optional<Category> findByWorkspaceAndDescriptionIgnoreCaseAndTypeAndDeletion_DeletedAtIsNull(Workspace workspace, String description, Type type);
+    Optional<Category> findByWorkspaceAndDescriptionIgnoreCaseAndTypeAndDeletionDeletedAtIsNull(Workspace workspace, String description, Type type);
 }

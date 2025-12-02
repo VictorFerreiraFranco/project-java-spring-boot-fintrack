@@ -27,7 +27,7 @@ public class WorkspaceService {
     private final MemberService memberService;
 
     public Optional<Workspace> findByIdAndDeletedAtIsNull(UUID id) {
-        return workspaceRepository.findByIdAndDeletion_DeletedAtIsNull(id);
+        return workspaceRepository.findByIdAndDeletionDeletedAtIsNull(id);
     }
 
     public List<Workspace> findAllByMembersUserAndDeletedAtIsNull(User user) {

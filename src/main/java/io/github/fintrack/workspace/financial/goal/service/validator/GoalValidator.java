@@ -28,7 +28,7 @@ public class GoalValidator {
     }
 
     public boolean goalExist(Goal goal) {
-        Optional<Goal> goalFund = goalRepository.findByCategory(goal.getCategory());
+        Optional<Goal> goalFund = goalRepository.findByCategoryAndDeletionDeletedAtIsNull(goal.getCategory());
 
         if (goal.getId() == null)
             return goalFund.isPresent();

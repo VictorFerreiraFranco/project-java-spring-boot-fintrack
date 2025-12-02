@@ -27,7 +27,7 @@ public class MethodService {
     private final WorkspaceValidator workspaceValidator;
 
     public Optional<Method> findByIdAndDeletedAtIsNull(UUID id) {
-        return methodRepository.findByIdAndDeletion_DeletedAtIsNull(id);
+        return methodRepository.findByIdAndDeletionDeletedAtIsNull(id);
     }
 
     public List<Method> searchByWorkspace(

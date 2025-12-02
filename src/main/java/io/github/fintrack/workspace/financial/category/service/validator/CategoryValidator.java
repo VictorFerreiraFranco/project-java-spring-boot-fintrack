@@ -29,7 +29,7 @@ public class CategoryValidator {
 
     public boolean categoryExists(Category category) {
         Optional<Category> categoryFund = categoryRepository
-                .findByWorkspaceAndDescriptionIgnoreCaseAndTypeAndDeletion_DeletedAtIsNull(
+                .findByWorkspaceAndDescriptionIgnoreCaseAndTypeAndDeletionDeletedAtIsNull(
                         category.getWorkspace(),
                         category.getDescription(),
                         category.getType()

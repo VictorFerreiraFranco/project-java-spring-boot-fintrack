@@ -1,14 +1,17 @@
-package io.github.fintrack.workspace.financial.goal.repository;
+package io.github.fintrack.transaction.transaction.repository;
 
 import io.github.fintrack.auth.model.Role;
 import io.github.fintrack.auth.model.User;
 import io.github.fintrack.auth.repository.UserRepository;
+import io.github.fintrack.transaction.transaction.model.Transaction;
 import io.github.fintrack.transaction.transaction.model.Type;
 import io.github.fintrack.workspace.financial.category.model.Category;
 import io.github.fintrack.workspace.financial.category.repository.CategoryRepository;
-import io.github.fintrack.workspace.financial.goal.model.Goal;
+import io.github.fintrack.workspace.payment.method.model.Method;
+import io.github.fintrack.workspace.payment.method.repository.MethodRepository;
 import io.github.fintrack.workspace.workspace.model.Workspace;
 import io.github.fintrack.workspace.workspace.repository.WorkspaceRepository;
+import jakarta.persistence.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,13 +20,14 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @ActiveProfiles("test")
-public class GoalRepositoryTest {
+public class TransactionRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -35,11 +39,13 @@ public class GoalRepositoryTest {
     private CategoryRepository categoryRepository;
 
     @Autowired
-    private GoalRepository goalRepository;
+    private MethodRepository methodRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     private User user;
-    private Category category;
-    private Goal goal;
+    private Transaction transaction;
 
     @BeforeEach
     void setUp() {
@@ -59,7 +65,7 @@ public class GoalRepositoryTest {
 
         workspaceRepository.save(workspace);
 
-        category = new Category();
+        Category category = new Category();
         category.setDescription("Test Category");
         category.setColor("#FFFFFF");
         category.setWorkspace(workspace);
@@ -69,54 +75,48 @@ public class GoalRepositoryTest {
 
         categoryRepository.save(category);
 
-        goal = new Goal();
-        goal.setCategory(category);
-        goal.setDescription("Test Goal");
-        goal.setAmount(BigDecimal.TEN);
-        goal.getCreation().setCreatedBy(user);
-        goal.getCreation().setCreatedAt(LocalDateTime.now());
+        Method method = new Method();
+        method.setDescription("Test Method");
+        method.setType(io.github.fintrack.workspace.payment.method.model.Type.BANK_TRANSFER);
+        method.setWorkspace(workspace);
+        method.getCreation().setCreatedBy(user);
+        method.getCreation().setCreatedAt(LocalDateTime.now());
 
-        goalRepository.save(goal);
+        methodRepository.save(method);
+
+        transaction = new Transaction();
+        transaction.setType(Type.EXPENSE);
+        transaction.setWorkspace(workspace);
+        transaction.setCategory(category);
+        transaction.setMethod(method);
+        transaction.setDescription("Test Transaction");
+        transaction.setAmount(BigDecimal.TEN);
+        transaction.setAmountInstallment(BigDecimal.ONE);
+        transaction.setStartDate(LocalDate.now());
+        transaction.setTotalInstallment(10);
+        transaction.setRecurrence(Boolean.FALSE);
+        transaction.getCreation().setCreatedBy(user);
+        transaction.getCreation().setCreatedAt(LocalDateTime.now());
+
+        transactionRepository.save(transaction);
     }
-
 
     @Test
     @DisplayName("Should find by id and deleted At Is Null")
     void shouldFindByIdWhenNotDeleted() {
-        var result = goalRepository.findByIdAndDeletionDeletedAtIsNull(goal.getId());
+        var result = transactionRepository.findByIdAndDeletionDeletedAtIsNull(transaction.getId());
 
         assertThat(result).isPresent();
-        assertThat(result.get().getDescription()).isEqualTo(goal.getDescription());
+        assertThat(result.get().getDescription()).isEqualTo(transaction.getDescription());
     }
 
     @Test
     @DisplayName("Should not find by id and deletedAt Is Not Null")
     void shouldNotFindByIdWhenDeletedAtIsNotNull() {
-        goal.getDeletion().markAsDeleted(user);
-        goalRepository.save(goal);
+        transaction.getDeletion().markAsDeleted(user);
+        transactionRepository.save(transaction);
 
-        var result = goalRepository.findByIdAndDeletionDeletedAtIsNull(goal.getId());
-
-        assertThat(result).isEmpty();
-    }
-
-    @Test
-    @DisplayName("Should find by category when not deleted")
-    void shouldFindByCategoryWhenNotDeleted() {
-        var result = goalRepository.findByCategoryAndDeletionDeletedAtIsNull(category);
-
-        assertThat(result).isPresent();
-        assertThat(result.get().getDescription()).isEqualTo(goal.getDescription());
-        assertThat(result.get().getCategory()).isEqualTo(goal.getCategory());
-    }
-
-    @Test
-    @DisplayName("Should not find by category when deleted")
-    void shouldNotFindByCategoryWhenDeleted() {
-        goal.getDeletion().markAsDeleted(user);
-        goalRepository.save(goal);
-
-        var result = goalRepository.findByCategoryAndDeletionDeletedAtIsNull(category);
+        var result = transactionRepository.findByIdAndDeletionDeletedAtIsNull(transaction.getId());
 
         assertThat(result).isEmpty();
     }

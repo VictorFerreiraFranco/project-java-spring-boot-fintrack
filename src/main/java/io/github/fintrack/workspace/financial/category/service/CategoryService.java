@@ -27,7 +27,7 @@ public class CategoryService {
     private final WorkspaceValidator workspaceValidator;
 
     public Optional<Category> findByIdAndDeletedAtIsNull(UUID id) {
-        return categoryRepository.findByIdAndDeletion_DeletedAtIsNull(id);
+        return categoryRepository.findByIdAndDeletionDeletedAtIsNull(id);
     }
 
     public List<Category> searchAllByWorkspace(

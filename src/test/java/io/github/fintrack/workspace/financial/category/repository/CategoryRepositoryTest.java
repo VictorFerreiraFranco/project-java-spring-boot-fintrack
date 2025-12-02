@@ -68,7 +68,7 @@ public class CategoryRepositoryTest {
     @Test
     @DisplayName("Should find by id and deleted At Is Null")
     void shouldFindByIdWhenNotDeleted() {
-        var result = categoryRepository.findByIdAndDeletion_DeletedAtIsNull(category.getId());
+        var result = categoryRepository.findByIdAndDeletionDeletedAtIsNull(category.getId());
 
         assertThat(result).isPresent();
         assertThat(result.get().getDescription()).isEqualTo(category.getDescription());
@@ -80,7 +80,7 @@ public class CategoryRepositoryTest {
         category.getDeletion().markAsDeleted(user);
         categoryRepository.save(category);
 
-        var result = categoryRepository.findByIdAndDeletion_DeletedAtIsNull(category.getId());
+        var result = categoryRepository.findByIdAndDeletionDeletedAtIsNull(category.getId());
 
         assertThat(result).isEmpty();
     }
@@ -88,7 +88,7 @@ public class CategoryRepositoryTest {
     @Test
     @DisplayName("Should find by workspace and description ignore case and type deletedAt is null")
     void shouldFindByWorkspaceAndDescriptionIgnoreCaseAndTypeWhenDeletedAtIsNull() {
-        var result = categoryRepository.findByWorkspaceAndDescriptionIgnoreCaseAndTypeAndDeletion_DeletedAtIsNull(
+        var result = categoryRepository.findByWorkspaceAndDescriptionIgnoreCaseAndTypeAndDeletionDeletedAtIsNull(
                 workspace,
                 category.getDescription().toLowerCase(),
                 category.getType()
@@ -105,7 +105,7 @@ public class CategoryRepositoryTest {
         category.setDescription("Test Category Updated");
         categoryRepository.save(category);
 
-        var result = categoryRepository.findByWorkspaceAndDescriptionIgnoreCaseAndTypeAndDeletion_DeletedAtIsNull(
+        var result = categoryRepository.findByWorkspaceAndDescriptionIgnoreCaseAndTypeAndDeletionDeletedAtIsNull(
                 workspace,
                 category.getDescription().toLowerCase(),
                 category.getType()

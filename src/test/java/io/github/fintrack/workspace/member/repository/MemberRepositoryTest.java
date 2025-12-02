@@ -65,7 +65,7 @@ public class MemberRepositoryTest {
     @Test
     @DisplayName("Should find by id and deletedAt is null")
     void shouldFindByIdWhenNotDeleted() {
-        var result = memberRepository.findByIdAndDeletion_DeletedAtIsNull(member.getId());
+        var result = memberRepository.findByIdAndDeletionDeletedAtIsNull(member.getId());
 
         assertThat(result).isPresent();
         assertThat(result.get().getId()).isEqualTo(member.getId());
@@ -77,7 +77,7 @@ public class MemberRepositoryTest {
         member.getDeletion().markAsDeleted(user);
         memberRepository.save(member);
 
-        var result = memberRepository.findByIdAndDeletion_DeletedAtIsNull(member.getId());
+        var result = memberRepository.findByIdAndDeletionDeletedAtIsNull(member.getId());
 
         assertThat(result).isEmpty();
     }
@@ -85,7 +85,7 @@ public class MemberRepositoryTest {
     @Test
     @DisplayName("Should find by workspace and user when deletedAt is null")
     void shouldFindByWorkspaceAndUserWhenNotDeleted() {
-        var result = memberRepository.findByWorkspaceAndUserAndDeletion_DeletedAtIsNull(workspace, user);
+        var result = memberRepository.findByWorkspaceAndUserAndDeletionDeletedAtIsNull(workspace, user);
 
         assertThat(result).isPresent();
         assertThat(result.get().getId()).isEqualTo(member.getId());
@@ -99,7 +99,7 @@ public class MemberRepositoryTest {
         member.getDeletion().markAsDeleted(user);
         memberRepository.save(member);
 
-        var result = memberRepository.findByWorkspaceAndUserAndDeletion_DeletedAtIsNull(workspace, user);
+        var result = memberRepository.findByWorkspaceAndUserAndDeletionDeletedAtIsNull(workspace, user);
 
         assertThat(result).isEmpty();
     }

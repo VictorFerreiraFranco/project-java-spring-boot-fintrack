@@ -27,7 +27,7 @@ public class GoalService {
     private final WorkspaceValidator workspaceValidator;
 
     public Optional<Goal> findByIdAndDeletedAtIsNull(UUID id) {
-        return goalRepository.findByIdAndDeletion_DeletedAtIsNull(id);
+        return goalRepository.findByIdAndDeletionDeletedAtIsNull(id);
     }
 
     public List<Goal> searchAllByWorkspace(

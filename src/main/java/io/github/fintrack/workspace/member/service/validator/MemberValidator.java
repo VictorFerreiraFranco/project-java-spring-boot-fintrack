@@ -35,7 +35,7 @@ public class MemberValidator {
     }
 
     public boolean memberExists(Member member) {
-        Optional<Member> memberFund = memberRepository.findByWorkspaceAndUserAndDeletion_DeletedAtIsNull(member.getWorkspace(), member.getUser());
+        Optional<Member> memberFund = memberRepository.findByWorkspaceAndUserAndDeletionDeletedAtIsNull(member.getWorkspace(), member.getUser());
 
         if (member.getId() == null)
             return memberFund.isPresent();

@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface GoalRepository extends JpaRepository<Goal, UUID>, JpaSpecificationExecutor<Goal> {
-    Optional<Goal> findByIdAndDeletion_DeletedAtIsNull(UUID id);
+    Optional<Goal> findByIdAndDeletionDeletedAtIsNull(UUID id);
 
-    Optional<Goal> findByCategory(Category category);
+    Optional<Goal> findByCategoryAndDeletionDeletedAtIsNull(Category category);
 }

@@ -40,7 +40,7 @@ public class WorkspaceServiceTest {
         Workspace workspace = new Workspace();
         workspace.setId(UUID.randomUUID());
 
-        when(workspaceRepository.findByIdAndDeletion_DeletedAtIsNull(workspace.getId()))
+        when(workspaceRepository.findByIdAndDeletionDeletedAtIsNull(workspace.getId()))
                 .thenReturn(Optional.of(workspace));
 
         Optional<Workspace> result = workspaceService.findByIdAndDeletedAtIsNull(workspace.getId());
@@ -48,7 +48,7 @@ public class WorkspaceServiceTest {
         assertThat(result).isPresent();
         assertThat(result.get().getId()).isEqualTo(workspace.getId());
 
-        verify(workspaceRepository).findByIdAndDeletion_DeletedAtIsNull(workspace.getId());
+        verify(workspaceRepository).findByIdAndDeletionDeletedAtIsNull(workspace.getId());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class WorkspaceServiceTest {
         UUID id = UUID.randomUUID();
         Workspace workspace = new Workspace();
 
-        when(workspaceRepository.findByIdAndDeletion_DeletedAtIsNull(id))
+        when(workspaceRepository.findByIdAndDeletionDeletedAtIsNull(id))
                 .thenReturn(Optional.of(workspace));
 
         Workspace result = workspaceService.findByIdAndValidateExistenceAndMembership(id);
@@ -85,7 +85,7 @@ public class WorkspaceServiceTest {
     void shouldThrowExceptionWhenWorkspaceNotFound() {
         UUID id = UUID.randomUUID();
 
-        when(workspaceRepository.findByIdAndDeletion_DeletedAtIsNull(id))
+        when(workspaceRepository.findByIdAndDeletionDeletedAtIsNull(id))
                 .thenReturn(Optional.empty());
 
         assertThatThrownBy(() ->

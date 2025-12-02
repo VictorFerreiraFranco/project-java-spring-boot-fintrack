@@ -79,7 +79,7 @@ class MethodRepositoryTest {
     @Test
     @DisplayName("Should find by id and deleted At Is Null")
     void shouldFindByIdWhenNotDeleted() {
-        var result = methodRepository.findByIdAndDeletion_DeletedAtIsNull(method.getId());
+        var result = methodRepository.findByIdAndDeletionDeletedAtIsNull(method.getId());
 
         assertThat(result).isPresent();
         assertThat(result.get().getDescription()).isEqualTo(method.getDescription());
@@ -92,7 +92,7 @@ class MethodRepositoryTest {
 
         Method saved = methodRepository.save(method);
 
-        var result = methodRepository.findByIdAndDeletion_DeletedAtIsNull(saved.getId());
+        var result = methodRepository.findByIdAndDeletionDeletedAtIsNull(saved.getId());
 
         assertThat(result).isEmpty();
     }

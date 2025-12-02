@@ -51,7 +51,7 @@ public class WorkspaceRepositoryTest {
 
         workspaceRepository.save(workspace);
 
-        Optional<Workspace> result = workspaceRepository.findByIdAndDeletion_DeletedAtIsNull(workspace.getId());
+        Optional<Workspace> result = workspaceRepository.findByIdAndDeletionDeletedAtIsNull(workspace.getId());
 
         assertThat(result).isPresent();
         assertThat(result.get().getId()).isEqualTo(workspace.getId());
@@ -70,7 +70,7 @@ public class WorkspaceRepositoryTest {
         workspaceRepository.save(workspace);
 
         Assertions.assertThat(workspaceRepository.findAll()).isNotEmpty();
-        Assertions.assertThat(workspaceRepository.findByIdAndDeletion_DeletedAtIsNull(workspace.getId())).isNotPresent();
+        Assertions.assertThat(workspaceRepository.findByIdAndDeletionDeletedAtIsNull(workspace.getId())).isNotPresent();
     }
 
     private Workspace createWorkspace(User user) {

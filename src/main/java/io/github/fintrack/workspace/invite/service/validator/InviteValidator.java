@@ -78,7 +78,7 @@ public class InviteValidator {
 
     public boolean userExistInWorkspace(Invite invite) {
         return memberRepository
-                .findByWorkspaceAndUserAndDeletion_DeletedAtIsNull(invite.getWorkspace(), invite.getTo())
+                .findByWorkspaceAndUserAndDeletionDeletedAtIsNull(invite.getWorkspace(), invite.getTo())
                 .isPresent();
     }
 
